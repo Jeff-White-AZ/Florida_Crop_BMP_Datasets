@@ -10,7 +10,8 @@ output:
 ```{r setup, echo=FALSE, comment=NA}
 knitr::opts_chunk$set(echo = TRUE)
 # Specify the name of the dataset here as data_set_name.
-data_set_name <- "FDACS_Hastings_potato_2011_2014_demo.xlsx"
+data_set_name <- "FDACS_UFGA8201_peanut.94.xlsx"
+file_path <- file.path("Data", data_set_name)
 
 ```
 
@@ -50,7 +51,7 @@ that are defined but have no data.
 
 ```{r list-sheets, echo=FALSE, comment=""}
 #' Load workbook
-wb <- wb_load(data_set_name)
+wb <- wb_load(file_path)
 
 
 #' Retrieve a list of the names of all sheets in the dataset.
