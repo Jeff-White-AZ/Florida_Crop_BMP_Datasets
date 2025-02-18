@@ -19,7 +19,7 @@ be viewed in a side-by-side comparison in the RStudio Viewer. An example
 is given in Figure 1 for differences in data between two versions of
 sheet ‘O3. Crop Growth’ of an example pair of datasets.
 
-<img src="media/image1.png" style="width:5.84722in;height:3.66763in" />
+<img src="Mismatch_view_only.png" style="width:4.0in;height:2.8in" />
 
 *Figure 1. Output of the diffObj() function as viewed in the RStudio
 viewer. Differences in data are highlighted in different colors. Only
