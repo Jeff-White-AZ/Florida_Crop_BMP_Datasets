@@ -1,0 +1,18 @@
+"SheetName","VariableName","Definition","Units","Priority","ICASA short name","ICASA long name","Equivalent"
+"O2. Yield Summary","Harvest date","Date the plot or sample was harvested","YYYY-MM-DD","Required","HDATE","harvest_date",NA
+"O2. Yield Summary","Harvested yield, dry weight","Yield of harvested product as dry weight","kg/ha","Required (dry or fresh)","HWAH","harvest_yield_harvest_dw",NA
+"O2. Yield Summary","Harvested yield, fresh weight","Yield of harvested product as fresh weight","kg/ha","Required (dry or fresh)","HFAM","harv_yield_matur_f_wt",NA
+"O2. Yield Summary","Moisture content of fresh yield","Moisture content of fresh yield (e.g., fruit, leaves, root) at harvest","%","Preferred","HMAH","harvest_moisture_maturity",NA
+"O2. Yield Summary","Plant density at harvest","Plant density (population or stand) at harvest","plants / m2","Preferred","PLPAH","plant_density_harvest",NA
+"O2. Yield Summary","Above ground biomass","Dry weight of tops (e.g., stems + leaves + any reproductive organs)  at harvest","kg/ha","Preferred","CWAH","tops_dry_weight_harvest",NA
+"O2. Yield Summary","Unit fruit fresh weight","Fresh weight of an individual fruit","g/fruit",NA,NA,NA,NA
+"O2. Yield Summary","Fruit firmness","Based on compressing single berries with a load cell","g/mm",NA,NA,NA,NA
+"O2. Yield Summary","Total souble solids","Concentration of sugars and other souble compounds as measured by refractometery","Brix",NA,NA,NA,NA
+"O2. Yield Summary","Total titratable acidity","Based on volume of titrant required to reach neutral pH","g/L",NA,NA,NA,NA
+"O2. Yield Summary","Bruised area of fruit","Portion of the fruit surface showing bruises","%",NA,NA,NA,NA
+"O3. Crop Growth","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD",NA,"DATE","date_of_measurement",NA
+"O3. Crop Growth","Crop height","Maximum vertical height of the crop canopy","cm","Preferred","CHTD",NA,NA
+"O3. Crop Growth","Leaf area index","Leaf area index on a given day",NA,NA,"LAID",NA,NA
+"O4. Crop Health","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD","Required","DATE","date_of_measurement",NA
+"O4. Crop Health",NA,NA,NA,NA,NA,NA,NA
+"O4. Crop Health",NA,NA,NA,NA,NA,NA,NA

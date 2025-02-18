@@ -1,0 +1,27 @@
+"SheetName","VariableName","Definition","Units","Priority","ICASA short name","ICASA long name","Equivalent"
+"O2. Yield Summary","Anthesis date","Date when 50% of plants had at least one anther open","YYYY-MM-DD",NA,"ADAT","anthesis_date",NA
+"O2. Yield Summary","First seed date",NA,"YYYY-MM-DD",NA,"R5AT","beginning_seed_stage",NA
+"O2. Yield Summary","Physiological maturity date","Date when 50% of plants reached physiological maturity as indicated by balc layer or similar criteria","YYYY-MM-DD",NA,"MDAT","physiologic_maturity_dat",NA
+"O2. Yield Summary","Harvest maturity date","Date when 50% of plants reached harvest maturity","YYYY-MM-DD",NA,"R8AT","harvest_maturity_stage",NA
+"O2. Yield Summary","Harvest date","Date the plot or sample was harvested","YYYY-MM-DD",NA,"HDATE","harvest_date",NA
+"O2. Yield Summary","Harvested yield, dry weight","Harvested yield at harvest (dry wt)","kg/ha",NA,"HWAH","harvest_yield_harvest_dw",NA
+"O2. Yield Summary","Moisture content of fresh yield","Moisture content of fresh yield (e.g., grain) at harvest","%",NA,"HMAH","harvest_moisture_maturity",NA
+"O2. Yield Summary","Plant density at harvest","Plant density (population or stand) at harvest","plants / m2",NA,"PLPAH","plant_density_maturity",NA
+"O2. Yield Summary","Total above ground biomass","Tops dry weight at harvest","kg/ha",NA,"CWAH","tops_dry_weight_harvest",NA
+"O2. Yield Summary","Number of ears, pods, or other fruiting structures at maturity",NA,"#/m2",NA,"H#UM","harv_no_per_unit",NA
+"O2. Yield Summary","Pod number at maturity",NA,"number/m2",NA,"PD#AM","pod_number_maturity",NA
+"O2. Yield Summary","Panicle number at maturity",NA,"number/m2",NA,"PN#AM","panicle_number_maturity",NA
+"O2. Yield Summary","Tiller number at maturity",NA,"number/m2",NA,"T#AM","tiller_number_maturity",NA
+"O2. Yield Summary","Average weight per fruiting structure",NA,"g/unit",NA,"HWUM","unit_dry_wt_harv_matur",NA
+"O2. Yield Summary","Seeds per fruiting strucuture","average number of seeds per pod, spike or equivalent fruting structure","#",NA,"H#UM","harv_no_per_unit",NA
+"O2. Yield Summary","N concentration in aboveground biomass at maturity",NA,"ppm",NA,"CNAM","tops_N_at_maturity",NA
+"O2. Yield Summary","N concentrations of grain or fruiting structure, leaves, branches",NA,"ppm",NA,"GNAM","grain_N_at_maturity",NA
+"O2. Yield Summary","Grain N concentration at maturity",NA,"%",NA,"GN%M","grain_N_conc_maturity",NA
+"O2. Yield Summary","Leaf number per stem at maturity",NA,"#",NA,"L#SM","leaf_no_per_stem_matur",NA
+"O3. Crop Growth","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD","Required","DATE","date_of_measurement",NA
+"O3. Crop Growth","Canopy height","Maximum height of canopy as average over plot","cm","Preferred","CHTD",NA,NA
+"O3. Crop Growth","Leaf area index","Leaf area index on a given day",NA,NA,"LAID","leaf_area_index",NA
+"O3. Crop Growth","Leaf nitrogen concentration","Leaf nitrogen concentration","% N",NA,"LNPCD","leaf_N_concentration",NA
+"O4. Crop Health","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD","Required","DATE","date_of_measurement",NA
+"O4. Crop Health",NA,NA,NA,NA,NA,NA,NA
+"O4. Crop Health",NA,NA,NA,NA,NA,NA,NA

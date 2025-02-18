@@ -1,0 +1,13 @@
+"SheetName","VariableName","Definition","Units","Priority","ICASA short name","ICASA long name","Equivalent","NA"
+"O2. Yield Summary","Harvest date","Date the plot or sample was harvested","YYYY-MM-DD",NA,"HDATE","harvest_date",NA,NA
+"O2. Yield Summary","Tuber yield","Tuber yield as fresh weight","Mg/ha","Required","UYFAD","tuber_fresh_weight",NA,NA
+"O2. Yield Summary","Plant density at harvest","Plant density (population or stand) at harvest","plants/m2",NA,"PLPAH","plant_density_harvest",NA,NA
+"O2. Yield Summary","Tuber nitrogen content","Tuber N at harvest","kg/ha",NA,"UNAM","tuber_N_at_harvest",NA,NA
+"O2. Yield Summary","Tuber specific gravity","Specific gravity of harvested tubers",NA,"Preferred",NA,NA,"Can be used to estimate dry matter content",NA
+"O2. Yield Summary","Tuber quality","USDA rating for marketable tubers",NA,"Preferred",NA,NA,NA,NA
+"O3. Crop Growth","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD","Required","DATE","date_of_measurement",NA,NA
+"O3. Crop Growth","Leaf area index","Leaf area index on a given day",NA,NA,"LAID","leaf_area_index",NA,NA
+"O3. Crop Growth","Canopy height","Maximum height of canopy as average over plot","cm",NA,"CHTD","canopy_height",NA,NA
+"O3. Crop Growth","Node number","Number of main-stem nodes","#",NA,"LnoSD","leaf_number_per_stem",NA,NA
+"O4. Crop Health","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD","Required","DATE","date_of_measurement",NA,NA
+"O4. Crop Health","Late blight rating","1 to 10 score where 10 = total crop death",NA,NA,NA,NA,"Hypothetical",NA

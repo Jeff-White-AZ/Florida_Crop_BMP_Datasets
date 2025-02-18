@@ -1,0 +1,22 @@
+"SheetName","VariableName","Definition","Units","Priority","ICASA short name","ICASA long name","Equivalent"
+"O2. Yield Summary","Harvest date","Date the plot or sample was harvested","YYYY-MM-DD","Required","HDATE","harvest_date",NA
+"O2. Yield Summary","boll dry weight","Dry weight ","kg/ha","Required","pod_dry_weight_maturity","PWAM",NA
+"O2. Yield Summary","Plant density at harvest (plants / m2)","Number of harvestable plants at harvest","plants / m2","Preferred","PLPAH","plant_density_harvest",NA
+"O2. Yield Summary","lint weight at maturity","Weight of lint (fiber) at maturity","g/m2","Preferred","LIWAM","lint_weight_maturity",NA
+"O2. Yield Summary","fiber length","Average length of the longer half of the fibers (upperhalf mean length)","inches",NA,"FILEN","fiber_length",NA
+"O2. Yield Summary","length uniformity","Ratio between the mean length and the upperhalf mean length of the fibers","%",NA,"FIBUI","fiber_uniformity",NA
+"O2. Yield Summary","fiber strength","Force in grams required to break a bundle of fibers one tex unit in size","g/tex",NA,"FISTR","fiber_strength",NA
+"O2. Yield Summary","Micronaire","Air permeability of a constant mass of cotton fibers compressed to a fixed volume",NA,NA,"FIMIC","fiber_micronaire",NA
+"O2. Yield Summary","color grade reflectance","Degree of reflectance as established by official standards and measured by the high volume instrument","Rd",NA,"FICRD","fiber_color_grade_Rd",NA
+"O2. Yield Summary","color grade yellowness","Yellowness (+b) as established by official standards and measured by the high volume instrument","+b",NA,"FICPB","fiber_color_grade_B",NA
+"O2. Yield Summary","Trash area","Surface area occupied by trash particles in scanned image","%",NA,"FITRS","fiber_HVI_trash",NA
+"O2. Yield Summary","Trash particle count","Number of trash particles visible in scanned image","#",NA,NA,NA,NA
+"O3. Crop Growth","Leaf area index","Leaf area index on a given day",NA,"Preferred","LAID","leaf_area_index",NA
+"O3. Crop Growth","Canopy height","Height of canopy","cm","Preferred","CHTD","canopy_height",NA
+"O3. Crop Growth","Plant height","Distance from cotyledon node to terminal node","cm",NA,NA,NA,NA
+"O3. Crop Growth","Node number","Number of main-stem nodes","#",NA,"LnoSD","leaf_number_per_stem",NA
+"O3. Crop Growth","Height-to-node ratio","Ratio of plant height to node number","cm/node",NA,NA,NA,NA
+"O4. Crop Health","Sting nematode rating","1 to 10 scale where 10 is total loss",NA,NA,NA,NA,NA
+"E5. Planting","Bed width","Furrow-to-furrow distance","cm",NA,NA,NA,"N"
+"E5. Planting","Bed top width","Width of top of bed","cm",NA,NA,NA,NA
+"W2. Daily Weather Data","PAR","Daily flux of photosythetically active radiation","umole…",NA,"PARD",NA,"Y"

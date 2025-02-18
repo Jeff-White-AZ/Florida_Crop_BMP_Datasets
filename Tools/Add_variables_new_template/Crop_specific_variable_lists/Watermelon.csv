@@ -1,0 +1,12 @@
+"SheetName","VariableName","Definition","Units","Priority","ICASA short name","ICASA long name","Equivalent"
+"O2. Yield Summary","Harvest date","Date crop was harvested","YYYY-MM-DD","Preferred","HDATE","harvest_date",NA
+"O2. Yield Summary","Fruit yield fresh","Total fresh weight of all harvested fruits","Mg/ha",NA,"FFAH","fruit_fresh_wt_harvest",NA
+"O2. Yield Summary","Marketable fresh fruit yield","Fresh weight of all harvested fruits judged marketable","Mg/ha",NA,NA,NA,NA
+"O2. Yield Summary","Cull fresh fruit yield","Fresh weight of all harvested fruits classified as culls","Mg/ha",NA,NA,NA,NA
+"O2. Yield Summary","Plant density at harvest","Plant density (population or stand) at harvest","plants/m2",NA,"PLPAH","plant_density_harvest",NA
+"O2. Yield Summary",NA,NA,NA,NA,NA,NA,NA
+"O3. Crop Growth","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD",NA,"DATE","date_of_measurement",NA
+"O3. Crop Growth","Leaf area index","Leaf area index on a given day",NA,"Preferred","LAID","leaf_area_index",NA
+"O3. Crop Growth","Canopy height","Maximum vertical height of the crop canopy","cm","Preferred","CHTD","canopy_height",NA
+"O4. Crop Health","Sampling Date","Date the measurement or sample was taken","YYYY-MM-DD",NA,"DATE","date_of_measurement",NA
+"O4. Crop Health",NA,NA,NA,NA,NA,NA,NA
