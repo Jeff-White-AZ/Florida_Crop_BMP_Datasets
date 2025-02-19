@@ -1,3 +1,5 @@
+# Introduction ------------------------------------------------------------
+
 #' This script is used to prepare a crop BMP data entry template by adding a list
 #' of user-specific variables that a project may plan to measure or report in their
 #' dataset.
@@ -32,15 +34,21 @@
 #' of interest is correctly named, and then the script creates the template
 #' with the requested variables.
 
+
 #==================================
+
+# 1. Load libraries and set working directory ----------------------------
+
 library(openxlsx2)  #Required for manipulating rows and columns of Excel
+
+
 
 #' Sets the working directory to the folder where the script, the template  
 #' and the variable list reside. The new file will also be created here.
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-#==================================
-# Function to test whether a specified file exists
+# 2. Define a function to test whether a specified file exists ------------
+
 check_file_exists <- function(file_path, file_specific_message = NULL) {
   if (!file.exists(file_path)) {
     message <- if (!is.null(file_specific_message)) {
@@ -52,17 +60,16 @@ check_file_exists <- function(file_path, file_specific_message = NULL) {
   } else {print(paste("Processing", file_path))}
 }
 
-#==================================
-#'Specify the name of the crop or sheet in the FDACS Observed Crop Variables.
-#'The name must match one of the existing sheets. Below is an opportunity to
-#'check that the name is valid (i.e., exists in the file). Names are case sensitive. 
+# 3. Specify name of CSV file with information on variables ---------------
+
+#'Specify the name of the CSV file containing variables, definitions, etc.
 csv_crop_file <- "Carrots.csv"
 csv_path <- file.path("Data", csv_crop_file)
 csv_message <- "Error: CSV file not found. Check name and location."
 check_file_exists(csv_path, csv_message)
 
 #'Specify the name of the BMP template
-template_xlsx <- "FDACS_template_1.00.xlsx"
+template_xlsx <- "FL_Crop_BMP_template_1.00.xlsx"
 template_path <- paste0("./Data/", template_xlsx)
 template_message <- "Error: data template file not found. Check name and location."
 check_file_exists(template_path, template_message)
@@ -71,7 +78,7 @@ target_wb <- wb_load(template_path)
 sheet_list <- wb_get_sheet_names(target_wb)
 data_sheets <- sheet_list[(4):(length(sheet_list) - 3)]  # Skips three intro sheets and three disctionary sheets
 
-#' Read the CSV file containing the variables to be added.
+# 4. Read the CSV file containing the variables to be added ----
 df_crop_vars <- read.csv(csv_path)
 names(df_crop_vars) <- gsub("\\.", " ", names(df_crop_vars))
 
@@ -86,8 +93,7 @@ names(df_crop_vars)[names(df_crop_vars) == "VariableType"] <- "SheetName"
 #' Create a list of the three dictionaries
 dictionaries <- c('Z1. Dictionary Metadata', 'Z2. Dictionary Observations', 'Z3. Dictionary Soils Weather')
 
-#==========================================================
-# Function to add variable names to existing worksheets
+# 5. Function to add variable names to existing worksheets ====
 add_variable_info <- function(target_wb, data_sheets, df_crop_vars) {
   
   for (i in seq_along(data_sheets)) {
@@ -136,8 +142,7 @@ add_variable_info <- function(target_wb, data_sheets, df_crop_vars) {
   }
 }
 
-#==========================================================
-# Function to add variable name, definition, etc. to the dictionaries
+# 6. Function to add variable name, definition, etc. to the dictionaries ----
 
 insert_new_definitions <- function(target_wb, df_crop_vars, dictionaries) {
   # Loop through the rows
@@ -186,8 +191,8 @@ insert_new_definitions <- function(target_wb, df_crop_vars, dictionaries) {
   return(target_wb)
 }
 
-#===============================
-# Function to modify the selected data frame
+# 7. Function to modify the selected data frame ================================
+
 modify_dataframe <- function(df, test_name, rows_to_insert, j) {
   print(paste("From modify_dataframe(), print rows_to_insert. Index j = ", j))
   print(rows_to_insert[ j, ])
@@ -227,13 +232,13 @@ modify_dataframe <- function(df, test_name, rows_to_insert, j) {
 }
 
 
-#==========================================================
-#' Call the two functions
+
+# 8. Call the two functions to add the variables and update the dictionary ====
 add_variable_info(target_wb, data_sheets, df_crop_vars)
 print ("Completed call for add_variable().")
 target_wb <- insert_new_definitions(target_wb, df_crop_vars, dictionaries)
 
-#==========================================================
+# 9. Housekeeping before closing the file. ====================================
 #' As housekeeping before closing the file, want to make "A1" as the focus 
 #' (visible upper left) cell and A1 or A5 as the selected (active) cell.
 #' 

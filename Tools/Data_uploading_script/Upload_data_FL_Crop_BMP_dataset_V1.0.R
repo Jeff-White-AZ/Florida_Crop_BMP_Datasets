@@ -1,3 +1,4 @@
+# 1. Introduction =============================================================
 #' This script provides examples of uploading data to an existing crop BMP
 #' dataset based on the BMP template.
 #' We assume that this script resides in a root directory and that the original
@@ -19,6 +20,8 @@
 #' the openxlsx2 library. Extensive comments are given, so people with limited 
 #' familiarity with R can more easily understand the specific steps. 
   
+# 2. Load libraries, set working directory and specify file to process ========
+
 library(openxlsx2)  # Required for manipulating Excel spreadsheets
 
 #' Sets the working directory to the folder where the script, the BMP dataset, and 
@@ -28,18 +31,17 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 #'The name of the existing FDACS BMP workbook that will be updated:
 file_to_update <- 'FL_BMP_UFGA8201_peanut_partial.xlsx'
 update_source_path <- file.path("Data", file_to_update)
+
+# 3. Load workbook and get list of sheets ======================================
 wb_to_update <- wb_load(update_source_path)          # This creates a workbook object
 data_start_position <- 4 # Flag to indicate which sheet is the first with actual data. 
 
-
-#'========================
-#' First, some general housekeeping to make sure everything is in place.
 #' Get and display the names of the sheets in the workbook to be updated
 dataset_sheets <- wb_get_sheet_names(wb_to_update) 
 print(dataset_sheets)
 
-#'========================
-#' Case 1: A complete set of data for one sheet. Data to be added are in a CSV file. 
+# 4. Case 1. A complete set of data for one sheet. =============================
+#'  Data to be added are in a CSV file. 
 #' Our example is daily weather data, contained in Weather_Gainesville_1982.csv. 
 #' In this case, we assume that, the variables are correctly named, 
 #' but that the station_identifier 'UFGA' needs to be added.
@@ -75,8 +77,7 @@ wb_to_update$add_data(x = weather_upload,
 #' The workbook still has to be saved to the folder "./Update", but we will 
 #' only do this after making two more updates.
 
-#========================
-#' Case 2: Updating growth data for one sheet. Data from a workbook.
+# 5. Case 2: Updating growth data for one sheet. Data from a workbook. =========
 #' The workbook 'Gainesville_1982_updates.xlsx' is loaded below as 'wb_source'.
 
 #' The name of the workbook containing data for updating for cases 2 and 3.
@@ -119,8 +120,7 @@ wb_to_update$add_data(x = merged_growth,
 #' The workbook still has to be saved to the folder "./Update", but we will 
 #' only do this after making two more updates.
 
-#'========================
-#' Case 3: Updating fertilizer applications from a workbook.
+# 6. Case 3: Updating fertilizer applications from a workbook. =================
 #' The workbook 'Gainesville_1982_updates.xlsx' was already loaded (see above)
 #' as wb_source in Case 2.
 #' We start by loading the data already in the workbook at sheet 
@@ -170,6 +170,7 @@ wb_to_update$add_data(x = merged_fertilizer,
                       sheet = target_sheet, start_row = 4, start_col = 1, 
                       col_names = TRUE, na.strings = "") 
 
+# 7. Apply formatting to sheets ================================================
 #' Applying the numeric style to the columns that should have numeric data.
 wb_to_update$add_numfmt(target_sheet, "D5:K100", numfmt = 1)
 
@@ -183,7 +184,6 @@ wb_to_update$add_cell_style(dims = "G5:M100",
                             horizontal = "right",
                             vertical = "center")
 
-#========================
 #' As a final housekeeping step before saving the updated workbook, we want to 
 #' make "A1" as the focus (visible upper left) cell and A1 or A5 as the selected 
 #' (active) cell.
@@ -205,6 +205,7 @@ for (i in 1:length(dataset_sheets)) {
 wb_to_update$set_selected(sheet = 1)  # Necessary to avoid multiple sheets being selected.
 wb_to_update$set_bookview(active_tab = 0, first_sheet = 0) # Actually sets the active sheet
 
+# 8. Create the filename for the updated workbook and save =====================
 #' Creating the file name for the updated Excel workbook by appending "UPDATED".
 filename_prefix <- substr(file_to_update,1, nchar(file_to_update) - 5)
 updated_file <- paste0(filename_prefix, "_UD.xlsx")
