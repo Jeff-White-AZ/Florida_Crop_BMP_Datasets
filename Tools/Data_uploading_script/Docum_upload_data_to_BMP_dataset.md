@@ -2,11 +2,11 @@
 
 **Script:** Upload_data_FL_Crop_BMP_dataset
 
-**Date:** Aug. 4, 2024
+**Date:** FebAug. 4, 2024
 
 **Introduction**
 
-Researchers may add data to an FDACS BMP workbook by filling cells
+Researchers may add data to an Florida Crop BMP workbook by filling cells
 manually (typing), copying data from other sources using the clipboard
 (“cut-and-paste”), or using software such as R to copy data. The first
 two options should be easy for users to follow without further
@@ -24,7 +24,7 @@ software include:
     a separate location, allowing the user to check the contents
     carefully.
 
-3.  ….
+3.  Once the routine for uploading is well understood, the same or similar approach can be applied to other types of data or for other projects.
 
 There are many scenarios for how data might be added to an FL Crop BMP
 Workbook. We consider three example cases:
@@ -99,8 +99,7 @@ This completes the basic process for uploading data to Crop BMP
 workbooks.
 
 Currently, the script does not update the dictionary ‘Z2. Dictionary
-Observations’. The corresponding variables can be added manually or
-using the script for adding variables to a blank template.
+Observations’. The corresponding variables can be added manually.
 
 **Adapting the Upload Script to Specific Needs**
 
