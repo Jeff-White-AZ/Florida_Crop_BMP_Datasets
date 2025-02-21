@@ -85,7 +85,7 @@ names(df_crop_vars) <- gsub("\\.", " ", names(df_crop_vars))
 #' Rename VariableType to SheetNameto match names in dictionaries
 names(df_crop_vars)[names(df_crop_vars) == "VariableType"] <- "SheetName"
 
-#' Write the crop variable information into the FDACS template file.
+#' Write the crop variable information into the template file.
 #' This is done with a loop that specifies which sheets are to be updated.
 #' The list of sheets could be expanded in the future to allow for more types of
 #' data.
