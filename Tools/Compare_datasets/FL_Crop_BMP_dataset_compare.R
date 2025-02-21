@@ -1,3 +1,4 @@
+# 1. Introduction ====================================================
 #' Compares the content (not formatting) of two datasets that are organized by
 #' three areas as in the Florida Crops BMP Template.
 #' The most frequent use woudl be when questions about differences between file
@@ -12,6 +13,7 @@
 #' cell format (row 3)
 #' Rows 4 and onward - Usually contains the main block of data for that sheet.
 
+# 2. Load libraries and specify file names and locations (paths). =============
 library(openxlsx2) # For manipulating *.xlsx files
 library(logr)      # For creating simple log files
 library(diffobj)   # For the graphical display of comparisons
@@ -39,6 +41,7 @@ if (!file.exists(file_path2)) {
   stop("File not found. Halting execution.")
 }
 
+# 3. Load the two workbooks and extract sheet names. =================
 # Load workbooks
 wb1 <- wb_load(file_path1)
 wb2 <- wb_load(file_path2)
@@ -48,6 +51,7 @@ sheet_names1 <- wb_get_sheet_names(wb1, escape = FALSE)
 sheet_names2 <- wb_get_sheet_names(wb2, escape = FALSE)
 
 #' Start the comparisons.
+# 4. Begin the comparisons with numbers of sheets and sheet names. =====
 # Compare the number of sheets in each workbook.
 log_print(paste("Sheets in ", file_path1))
 log_print(sheet_names1)
@@ -78,7 +82,7 @@ if (!identical(sheet_names1, sheet_names2)) {
   log_print(msg)
 }
 
-#' Compare sheet contents
+# 5. Compare the sheet contents =========================================
 # Create a function suggested by ChatGPT
 compare_data_frames <- function(df1, df2) {
   #Ensure both data frames have content
@@ -109,7 +113,7 @@ mismatched_sheets1 <- list()
 mismatched_sheets2 <- list()
 mismatched_sheets3 <- list()
 
-#' Start by comparing contents of cell A1
+# 5.1. Compare the sheet contents of cell A1 (Instructions) ==================
 
 for (test_sheet in sheet_names1) {
     print(paste("Comparing first row of: ", test_sheet))
@@ -136,8 +140,7 @@ for (test_sheet in sheet_names1) {
    }
 }
 
-#' Compare any content in rows 2 and 3
-
+# 5.2. Compare the sheet contents in rows 2 and 3 (units and text notes) ===========
 # sheet_names1 <- c("Z2. Dictionary Observations", "Z3. Dictionary Soils Weather")
 # sheet_names2 <- sheet_names1
 for (test_sheet in sheet_names1) {
