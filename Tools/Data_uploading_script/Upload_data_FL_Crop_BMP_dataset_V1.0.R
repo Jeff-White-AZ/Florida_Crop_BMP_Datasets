@@ -30,7 +30,7 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 #'The name of the existing BMP workbook that will be updated:
 file_to_update <- 'FL_BMP_UFGA8201_peanut_partial.xlsx'
-update_source_path <- file.path("Data", file_to_update)
+update_source_path <- file.path("Test_data", "Data", file_to_update)
 
 # 3. Load workbook and get list of sheets ======================================
 wb_to_update <- wb_load(update_source_path)          # This creates a workbook object
@@ -47,7 +47,7 @@ print(dataset_sheets)
 #' but that the station_identifier 'UFGA' needs to be added.
 #' Load the CSV file
 source_file <- 'Weather_Gainesville_1982.csv'
-upload_path <- paste0("./Data/", source_file)
+upload_path <-  file.path("Test_data", "Data", source_file)
 weather_upload <- read.csv(upload_path)
 
 #' Checking that the data are loaded as expected.
@@ -82,7 +82,7 @@ wb_to_update$add_data(x = weather_upload,
 
 #' The name of the workbook containing data for updating for cases 2 and 3.
 source_file <- 'Gainesville_1982_updates.xlsx'
-upload_path <- paste0("./Data/", source_file)
+upload_path <- file.path("Test_data", "Data", source_file)
 wb_source <- wb_load(upload_path)     # This creates a workbook object for some of the data to be uploaded.
 
 #' We first load the data already present in the workbook to update, sheet 
@@ -209,7 +209,7 @@ wb_to_update$set_bookview(active_tab = 0, first_sheet = 0) # Actually sets the a
 #' Creating the file name for the updated Excel workbook by appending "UPDATED".
 filename_prefix <- substr(file_to_update,1, nchar(file_to_update) - 5)
 updated_file <- paste0(filename_prefix, "_UD.xlsx")
-update_path <- paste0("./Updated/", updated_file)
+update_path <- file.path("Test_data", "Updated", updated_file)
 wb_to_update$save(update_path)
 
 #' End of processing. Check folder for the newly created crop template file:

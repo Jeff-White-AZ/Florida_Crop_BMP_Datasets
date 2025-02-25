@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 # Specify the name of the dataset here as data_set_name.
 data_set_name <- "FDACS_UFGA8201_peanut.94.xlsx"
-file_path <- file.path(data_set_name)
+file_path <- file.path("Test_data", data_set_name)
 
 ```
 

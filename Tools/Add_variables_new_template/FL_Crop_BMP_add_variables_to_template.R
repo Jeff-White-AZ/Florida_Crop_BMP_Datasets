@@ -41,8 +41,6 @@
 
 library(openxlsx2)  #Required for manipulating rows and columns of Excel
 
-
-
 #' Sets the working directory to the folder where the script, the template  
 #' and the variable list reside. The new file will also be created here.
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
@@ -62,15 +60,15 @@ check_file_exists <- function(file_path, file_specific_message = NULL) {
 
 # 3. Specify name of CSV file with information on variables ---------------
 
-#'Specify the name of the CSV file containing variables, definitions, etc.
-csv_crop_file <- "Carrots.csv"
-csv_path <- file.path("Data", csv_crop_file)
+#'Specify the name and path of the CSV file containing variables, definitions, etc.
+csv_crop_file <- "Tomato.csv"
+csv_path <- file.path("Test_data", "Data", csv_crop_file)
 csv_message <- "Error: CSV file not found. Check name and location."
 check_file_exists(csv_path, csv_message)
 
-#'Specify the name of the BMP template
+#'Specify the name and path of the BMP template
 template_xlsx <- "FL_Crop_BMP_template_1.00.xlsx"
-template_path <- paste0("./Data/", template_xlsx)
+template_path <- file.path("Test_data", "Data", template_xlsx)
 template_message <- "Error: data template file not found. Check name and location."
 check_file_exists(template_path, template_message)
 
@@ -263,10 +261,10 @@ target_wb$set_bookview(active_tab = 0, first_sheet = 0)
 #' Save the new Excel workbook that is the new data entry template.
 crop_name <- substr(csv_crop_file, 1, (nchar(csv_crop_file) - 4))
 saved_file <- paste0("FL_Crop_BMP_dataset_", crop_name, ".xlsx")
-saved_path <- file.path(saved_file)
+saved_path <- file.path("Test_data", saved_file)
 
 target_wb$save(saved_path)
-writeLines(c("Updated crop template is in source folder: ", saved_file))
+writeLines(c("Updated crop template is in source folder: ", saved_path))
 
 #==========================================================
 #' Generic R housekeeping

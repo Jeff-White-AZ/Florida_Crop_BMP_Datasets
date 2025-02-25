@@ -1,0 +1,135 @@
+=========================================================================
+Log Path:
+C:/Github_projects/Florida-Crop-BMP-Datasets/Tools/Compare_datasets/Excel
+compare.log
+Program Path:
+C:/Github_projects/Florida-Crop-BMP-Datasets/Tools/Compare_datasets/FL_Crop_BMP_dataset_compare.R
+Working Directory:
+C:/Github_projects/Florida-Crop-BMP-Datasets/Tools/Compare_datasets
+User Name: j_whi
+R Version: 4.4.2 (2024-10-31 ucrt)
+Machine: JEFF_2024-01 x86-64
+Operating System: Windows 10 x64 build 26100
+Base Packages: stats graphics grDevices utils datasets methods base
+Other Packages: diffobj_0.3.5 logr_1.3.8 common_1.1.3 openxlsx2_1.13.0.9000
+Log Start Time: 2025-02-25 09:51:07.279985
+=========================================================================
+
+Sheets in Test_data/FDACS_UFGA8201_peanut.94.xlsx
+
+NOTE: Log Print Time:  2025-02-25 09:51:07.624063
+NOTE: Elapsed Time: 0.343430995941162 secs
+
+START HERE
+Terminology
+List of sheets and keys
+M1. Experiments
+M2. Sites
+M3. Experimental Design
+E1. Treatments
+E2. Fields
+E3. Plots
+E4. Crop Information
+E5. Planting
+E6. Irrigation
+E7. Fertilizer
+E9. Tillage
+E8. Organic Amendments
+E10. Chemical Applications
+E11. Harvest
+E12. Preplant Soil
+O1. Analysis Methods
+O2. Yield Summary
+O3. Crop Growth
+O4. Crop Health
+O5. Soil Surface Properties
+O6. Soil Layer Properties
+O7. Water
+S1. Soil Metadata
+S2. Soil Layer Properties
+W1. Weather Station Metadata
+W2. Daily Weather Data
+Z1. Dictionary Metadata
+Z2. Dictionary Observations
+Z3. Dictionary Soils Weather
+
+NOTE: Log Print Time:  2025-02-25 09:51:07.628676
+NOTE: Elapsed Time: 0.00461292266845703 secs
+
+Sheets in Test_data/FDACS_UFGA8201_peanut.94_new.xlsx
+
+NOTE: Log Print Time:  2025-02-25 09:51:07.629474
+NOTE: Elapsed Time: 0.00079798698425293 secs
+
+START HERE
+Terminology
+List of sheets and keys
+M1. Experiments
+M2. Sites
+M3. Experimental Design
+E1. Treatments
+E2. Fields
+E3. Plots
+E4. Crop Information
+E5. Planting
+E6. Irrigation
+E7. Fertilizer
+E9. Tillage
+E8. Organic Amendments
+E10. Chemical Applications
+E11. Harvest
+E12. Preplant Soil
+O1. Analysis Methods
+O2. Yield Summary
+O3. Crop Growth
+O4. Crop Health
+O5. Soil Surface Properties
+O6. Soil Layer Properties
+O7. Water
+S1. Soil Metadata
+S2. Soil Layer Properties
+W1. Weather Station Metadata
+W2. Daily Weather Data
+Z1. Dictionary Metadata
+Z2. Dictionary Observations
+Z3. Dictionary Soils Weather
+
+NOTE: Log Print Time:  2025-02-25 09:51:07.630689
+NOTE: Elapsed Time: 0.00121498107910156 secs
+
+Same number of sheets in both files.
+
+NOTE: Log Print Time:  2025-02-25 09:51:07.631368
+NOTE: Elapsed Time: 0.00067901611328125 secs
+
+Sheet names are identical for the two files.
+
+NOTE: Log Print Time:  2025-02-25 09:51:07.632104
+NOTE: Elapsed Time: 0.000735998153686523 secs
+
+Worksheets differ for rows 2 and 3 in sheet: S2. Soil Layer Properties
+
+NOTE: Log Print Time:  2025-02-25 09:51:08.17623
+NOTE: Elapsed Time: 0.544126033782959 secs
+
+Worksheets differ for rows 2 and 3 in sheet: Z2. Dictionary Observations
+
+NOTE: Log Print Time:  2025-02-25 09:51:08.215233
+NOTE: Elapsed Time: 0.0390031337738037 secs
+
+To see a detailed comparison for individual sheets, use the console of RStudio
+to run the code given below. Enter each sheet name as given above twice, once
+for each workbook being compared.
+diffObj(mismatched_sheetsN[['sheet_name']]$df1,
+mismatched_sheetsN[['sheet_name']]$df2) Where 'N' indicates which of the three
+areas of the sheet has a mismatch. For example:
+diffObj(mismatched_sheets1[['Z2. Dictionary Observations']]$df1,
+mismatched_sheets1[['Z2. Dictionary Observations']]$df2)
+
+NOTE: Log Print Time:  2025-02-25 09:51:08.561615
+NOTE: Elapsed Time: 0.346381902694702 secs
+
+=========================================================================
+Log End Time: 2025-02-25 09:51:08.562265
+Log Elapsed Time: 0 00:00:01
+=========================================================================

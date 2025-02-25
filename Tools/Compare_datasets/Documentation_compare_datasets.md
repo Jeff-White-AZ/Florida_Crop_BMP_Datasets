@@ -48,9 +48,9 @@ language, use of RStudio, and organization of their datasets.
 4. Edit the file path names for the two files you wish to compare. For
    example:
 
-> file_path1 \<- file.path("FDACS_UFGA8201_peanut.94.xlsx")
+> file_path1 \<- file.path("Test_data", "FDACS_UFGA8201_peanut.94.xlsx")
 > 
-> file_path2 \<- file.path("FDACS_UFGA8201_peanut.94_new.xlsx")
+> file_path2 \<- file.path("Test_data", "FDACS_UFGA8201_peanut.94_new.xlsx")
 > 
 > The function file.path() can receive multiple arguments, allowing you
 > to specify complex paths if needed.
@@ -129,22 +129,18 @@ is a bit complicated, we summarize the process here:
 
 Remember that you can resize the Viewer window to see more rows or
 columns of data. The diffObs function will display multiple blocks of
-data (“hunks”) if neeed. See the diffObs documentation:
+data (“hunks”) if needed. See the diffObs documentation:
 <https://cran.r-project.org/web/packages/diffobj/vignettes/diffobj.html#interpreting-diffs>
 for more information.
 
 **Troubleshooting**
 
-The most likely problem will be failure to find one or both of the
-datasets, which will cause the script to abort with the message:
+The most likely problem will be failure to find one or both of the datasets, which will cause the script to abort with the message:
 
 Error in wb_load(file_path1) : File does not exist.\n"
 
-If you are using diffObj(), be sure to edit in the integer (1, 2 or 3)
-after “sheets” in **both** positions and that the sheet name is given
-correctly in **both** positions.
+A first step in debugging path or file name issues is to check that the working directory is where you expected by running getwd() from the console.
 
-In developing the script, we encountered a problem with a sheet
-that contained empty cells. We believe this problem has been resolved,
-but if an error occurs when the script executes wb_to_df(), please try
-to isolate the problem and contact us.
+If you are using diffObj(), be sure to edit in the integer (1, 2 or 3) after “sheets” in **both** positions and that the sheet name is given correctly in **both** positions.
+
+In developing the script, we encountered a problem with a sheet that contained empty cells. We believe this problem has been resolved, but if an error occurs when the script executes wb_to_df(), please try to isolate the problem and contact us.

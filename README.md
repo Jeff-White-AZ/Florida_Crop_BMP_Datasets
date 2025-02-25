@@ -8,15 +8,17 @@ This web site contains the blank template (FL_Crops_BMP_Template.xlsx), example 
 
 - Add_variables_new_template: Allows users to populate a blank template with variables listed in a crop- or research-specific CSV file. The CSV includes columns indicating which template worksheet should recieve each variable, definitions, units of measurement and ICASA equivalents. The sub-folder Crop_specific_variable_lists contains example CSV files for many crops.
 
+- Compare_datasets: Allows two datasets to be compared in order to detect differences in versions or other issues. The checks start with simple checks for number and names of worksheets and then compares content of each sheet.
+
+- Convert_xlsx_to_csv: Extracts data from each sheet of a dataset and exports as individual .csv files. This allows using data with any software tools that cannot access spreadsheets.
+
 - Data_uploading_script: Provides three examples of how data can be uploaded to a partially completed dataset.
 
-- Quality_assurance: Analyses a dataset according to what we term "the four C's of dataset. Datasets shoudlbe Correct, Complete, Coherent, and Compatible. The results are provided as text-based report in PDF that inlcudes a map of locations, time-line plots, and box-plots.
+- Quality_assurance: Analyses a dataset according to what we term "the four C's of dataset. Datasets should be Correct, Complete, Coherent, and Compatible. The results are provided as text-based report in PDF that inlcudes a map of locations, time-line plots, and box-plots.
 
-- Dataset_comparison: Allows two datasets to be compared in order to detect differences in versions or other issues. The checks start with simple checks for number and names of worksheets and then compares content of each sheet.
-  
-  ## Basic Template Features
-  
-  Folders within the template workbook are organized in blocks coded by tab colors as follows:
+## Basic Template Features
+
+Folders within the template workbook are organized in blocks coded by tab colors as follows:
 
 - Introduction and Instructions: Three sheets that introduce the content and provide guidance on how to fill the sheets with data. The sheet 'List of sheets and keys' includes links that allow users to jump to specific sheets.
 
@@ -31,13 +33,14 @@ This web site contains the blank template (FL_Crops_BMP_Template.xlsx), example 
 - Weather: Decribes sources of daily weather data and report daily values for variables such as solar radiation, maximum and minimum temperature, and precipitation.
 
 - Dictionary: Contains names of all variables with the associated location (sheet), definition, unit of measurement, and equivalent ICASA terms.
-  
-  ## Dataset Tools
-  
-  To assist users in populating templates and managing datasets as they are being completed, a series of scripts written for R are available. Each tool is in a separate folder that contains the script, a document explaining how to use the script, and any additional sub-folders and files that the script may require. To run most scripts, the user mainly has to save the script to a desired location and then edit the script to provide the name of the spreadsheet file. We assume users have a basic understanding of programming with R within the RStudio environment.
+
+## Dataset Tools
+
+  To assist users in populating templates and managing datasets as they are being completed, a series of scripts written for R are available. Each tool is in a separate folder that contains the script, a document explaining how to use the script, and any additional sub-folders and files that the script may require. To run most scripts, the user mainly has to save the script to a desired location and then edit the script to provide the name of the spreadsheet file and the path. We assume users have a basic understanding of programming with R within the RStudio environment. The scripts are written using base R as far as possible.
   New tools are developed as the need arises. We welcome suggestions for new tools or how to make the tools more user friendly.
-  
-  ## References
+
+## References
+
 * Hunt, L.A., White, J.W., Hoogenboom, G., 2001. Agronomic data: advances in documentation and protocols for exchange and use. Agricultural Systems 70, 477–492. https://doi.org/10.1016/S0308-521X(01)00056-7
 
 * Porter, C.H., Villalobos, C., Holzworth, D., Nelson, R., White, J.W., Athanasiadis, I.N., Janssen, S., Ripoche, D., Cufi, J., Raes, D., Zhang, M., Knapen, R., Sahajpal, R., Boote, K., Jones, J.W., 2014. Harmonization and translation of crop modeling data to ensure interoperability. Environmental Modelling & Software 62, 495–508. https://doi.org/10.1016/j.envsoft.2014.09.004

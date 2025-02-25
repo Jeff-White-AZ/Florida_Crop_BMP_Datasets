@@ -2,70 +2,42 @@
 
 **Script:** Upload_data_FL_Crop_BMP_dataset
 
-**Date:** FebAug. 4, 2024
+**Date:** Feb 25, 2025
 
 **Introduction**
 
-Researchers may add data to an Florida Crop BMP workbook by filling cells
-manually (typing), copying data from other sources using the clipboard
-(“cut-and-paste”), or using software such as R to copy data. The first
-two options should be easy for users to follow without further
-instruction and will often prove sufficient. Adding data via other
-software may seem daunting but has advantages, especially when
-dealing with large sets of data or when the update process will be
-repeated several times during an experiment. These advantages include:
+Researchers may add data to an Florida Crop BMP workbook by filling cells manually (typing), copying data from other sources using the clipboard (“cut-and-paste”), or using software such as R to copy data. The first two options should be easy for users to follow without further instruction and will often prove sufficient. Adding data via other software may seem daunting but has advantages, especially when dealing with large sets of data or when the update process will be repeated several times during an experiment. These advantages include:
 
-1. For large amount of data on a repetitive basis, the effort to
-   configure a script to update the sheets will justify the extra
-   effort in terms of time required and reductions in errors.
+1. For large amount of data on a repetitive basis, the effort to configure a script to update the sheets will justify the extra effort in terms of time required and reductions in errors.
 
-2. The process of updating will automatically save the updated file in
-   a separate location, allowing the user to check the contents
-   carefully.
+2. The process of updating will automatically save the updated file in a separate location, allowing the user to check the contents carefully.
 
 3. Once the routine for uploading is well understood, the same or similar approach can be applied to other types of data or for other projects.
 
-There are many scenarios for how data might be added to an FL Crop BMP
-Workbook. We consider three example cases:
+There are many scenarios for how data might be added to an FL Crop BMP Workbook. We consider three example cases:
 
-- A full year of daily weather data as a comma-separated variables
-  (CSV) file.
+- A full year of daily weather data as a comma-separated variables (CSV) file.
 
 - Fertilizer application records contained in a source workbook.
 
 - Yield and summary data in a source workbook.
 
-For each case, the script reads the data, organizes the data as needed,
-and then writes the data to the target Crop BMP workbook. Key
-differences in processing the examples concern whether the variables are
-already listed in the worksheet, whether data are already present, and
-if so, what identifiers are needed to allow merging the data.
+For each case, the script reads the data, organizes the data as needed, and then writes the data to the target Crop BMP workbook. Key differences in processing the examples concern whether the variables are already listed in the worksheet, whether data are already present, and if so, what identifiers are needed to allow merging the data.
 
-The script is intended only to illustrate possible approaches for
-uploading data using R and openxlsx2. The exact approach will depend on
-the type of data that need to be uploaded. We assume that the user is
-sufficiently familiar with the R language and use of RStudio to be able
-to modify the script according to their specific needs or to develop new
-scripts.
+The script is intended only to illustrate possible approaches for uploading data using R and openxlsx2. The exact approach will depend on the type of data that need to be uploaded. We assume that the user is sufficiently familiar with the R language and use of RStudio to be able to modify the script according to their specific needs or to develop new scripts.
 
 **Basic Procedure for Uploading Data: Three Examples**
 
 The procedure for adding the three **example** sets of data are outlined
 below:
 
-1. Download the script ‘Upload_data_FL_Crop_BMP_dataset’ to a folder of
-   your choice.
+1. Download the script ‘Upload_data_FL_Crop_BMP_dataset’ to a folder of your choice. 
 
-2. Create two new folders within the chosen folder, ‘/Data’ and
-   ‘/Updated’.
+2. Create two new folders within the chosen folder, ‘/Data’ and ‘/Updated’.
 
-3. Copy the files to be updated to the ‘Data’ folder. Most often, this
-   would just be a single BMP dataset that already is partially
-   completed. For demonstration purposes, we use the dataset
-   ‘FL_BMP_UFGA8201_peanut_partial.xlsx’.
+3. Copy the files to be updated to the ‘Data’ folder. Most often, this would just be a single BMP dataset that already is partially completed. For demonstration purposes, we use the dataset ‘FL_BMP_UFGA8201_peanut_partial.xlsx’.
 
-4. Copy the source data file, which may be in CSV or XLSX format. For
-   demonstration purposes, copy two files to the ‘Data’ folder:
+4. Copy the source data file, which may be in CSV or XLSX format. For    demonstration purposes, copy two files to the ‘Data’ folder:
    
    1. ‘Gainesville_1982_updates.xlsx’
    
@@ -76,8 +48,7 @@ below:
 6. If not already loaded, install the package openxlsx2 from Tools -\>
    Install packages …
 
-7. Edit the list ‘set_list’ to contain the name of the BMP dataset that
-   will receive the additional data.
+7. Edit the list ‘set_list’ to contain the name of the BMP dataset that will receive the additional data.
 
 8. Run the script from RStudio by entering ‘alt-ctrl-r’ or navigating
    through the menu bar to Code -\> Run Region -\> Run All.

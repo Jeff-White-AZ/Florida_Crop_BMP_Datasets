@@ -26,8 +26,8 @@ comparison_log_path <- file.path(getwd(), "Excel compare.log")
 comparison_log <- log_open(comparison_log_path, logdir = FALSE)
 
 # Input file names
-file_path1 <- file.path("FDACS_UFGA8201_peanut.94.xlsx")
-file_path2 <- file.path("FDACS_UFGA8201_peanut.94_new.xlsx")
+file_path1 <- file.path("Test_data", "FDACS_UFGA8201_peanut.94.xlsx")
+file_path2 <- file.path("Test_data", "FDACS_UFGA8201_peanut.94_new.xlsx")
 
 # Checking whether the files exist
 if (!file.exists(file_path1)) {

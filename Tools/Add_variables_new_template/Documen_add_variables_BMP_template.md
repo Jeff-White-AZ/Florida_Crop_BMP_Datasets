@@ -6,20 +6,14 @@
 
 **Introduction**
 
-To prepare a Crop BMP workbook for data entry, researchers will
-normally start with the template and then add variables they
-expect to report in their final dataset. Variables need to be defined,
-including the required units, and if possible linked to equivalent
-variables from the [ICASA Data Dictionary](https://github.com/DSSAT/ICASA-Dictionary/raw/refs/heads/main/ICASA%20Data%20Dictionary.xlsx).
+To prepare a Crop BMP workbook for data entry, researchers will normally start with the template and then add variables they expect to report in their final dataset. Variables need to be defined, including the required units, and if possible linked to equivalent variables from the [ICASA Data Dictionary](https://github.com/DSSAT/ICASA-Dictionary/raw/refs/heads/main/ICASA%20Data%20Dictionary.xlsx).
 
-To assist the initial workbook preparation, the R script
-‘FL_Crop_BMP_add_variables_to_template‘ was created. The script reads a
+To assist the initial workbook preparation, the R script ‘FL_Crop_BMP_add_variables_to_template‘ was created. The script reads a
 user-prepared list of variables, copies them to the designated sheets in
 a workbook, updates the workbook dictionary, and then saves the
 workbook.
 
-The new variables are defined in a CSV file such as 'Cotton.csv'. A series of files with suggested terms are available in the folder Crop_specific_variable_lists. Individual files
-are primarily named for crops (e.g. ‘Carrots’, ‘Cotton’, or ‘Potato’), indicating the types of variables used. Users can create new files using file names aligned with the needs of their projects. Each file contains nine variables:
+The new variables are defined in a CSV file such as 'Cotton.csv'. A series of files with suggested terms are available in the folder Crop_specific_variable_lists. Individual files are primarily named for crops (e.g. ‘Carrots’, ‘Cotton’, or ‘Potato’), indicating the types of variables used. Users can create new files using file names aligned with the needs of their projects. Each file contains nine variables:
 
 - SheetName – The name of the sheet where the variable will be added.
 
@@ -42,29 +36,20 @@ are primarily named for crops (e.g. ‘Carrots’, ‘Cotton’, or ‘Potato’
 
 The full procedure for adding data is outlined in the steps below. We assume that the user is familiar with the R language, use of RStudio, and understands how the Crop BMP template is organized.
 
-1. Download the script ‘FL_Crop_BMP_add_variables_to_template’ to a folder of
-   your choice.
+1. Download the script ‘FL_Crop_BMP_add_variables_to_template’ to a folder of    your choice.
 
-2. Create a folder within the chosen folder, ‘/Data’.
+2. Create a folder within the chosen folder, ‘/Data’. Edit the path as necessary in as an argument of file.path().
 
 3. Copy the BMP template file to the ‘/Data’ folder.
 
 4. Copy the variable list CSV file to the ‘/Data’ folder.
 
-5. Prepare the list of variables to be added to the crop variables
-   workbook.
+5. Prepare the list of variables to be added to the crop variables workbook.
    
    1. Open the CSV file.
-   2. For reach variable to be added, identify which worksheet in the
-      BMP template should contain the variable. Copy the sheet name
-      to the column ‘SheetName’ and enter the variable name in the
-      adjacent column, ‘VariableName.’
-   3. Enter the definition, units and priority. If the project
-      proposal states clearly that the variable will be measured, the
-      priority should be ‘Req’ for “Required”.
-   4. Attempt to identify the equivalent ICASA short name and long
-      name for the variable. If the definition and units make it clear
-      that the variables are equivalent, enter “Y’ under ‘Equivalent’.
+   2. For reach variable to be added, identify which worksheet in the BMP template should contain the variable. Copy the sheet name to the column ‘SheetName’ and enter the variable name in the adjacent column, ‘VariableName.’
+   3. Enter the definition, units and priority. If the project proposal states clearly that the variable will be measured, the priority should be ‘Req’ for “Required”.
+   4. Attempt to identify the equivalent ICASA short name and long name for the variable. If the definition and units make it clear that the variables are equivalent, enter “Y’ under ‘Equivalent’.
    5. Repeat this process for all variables of interest.
    6. Save the file.
 
@@ -73,33 +58,23 @@ The full procedure for adding data is outlined in the steps below. We assume tha
 7. If not done previously, install the package openxlsx2 from Tools -\>
    Install packages …
 
-8. In section 3, edit the variable ‘csv_crop_file’ to contain the name of the CSV file
-   that contains the list of variables to be added. This should be the only modification needed to the R script.
+8. In section 3, edit the variable ‘csv_crop_file’ to contain the name of the CSV file that contains the list of variables to be added. This should be the only modification needed to the R script.
 
-9. Run the script from RStudio by entering ‘alt-ctrl-r’ or navigating
-   through the menu bar to Code -\> Run Region -\> Run All.
+9. Run the script from RStudio by entering ‘alt-ctrl-r’ or navigating through the menu bar to Code -\> Run Region -\> Run All.
 
-10. The script should run, outputting a few lines of information to
-    assist possible de-bugging. The last lines of output are from
-    “housekeeping” to free memory and remove objects.
+10. The script should run, outputting a few lines of information to assist possible de-bugging. The last lines of output are from “housekeeping” to free memory and remove objects.
 
-11. Navigate to the folder containing the script. This file will
-    contain the template with the new variables as specified in the CSV file. The template will have the CSV file name appended (e.g., 'FL_Crop_BMP_dataset_Tomato.xlsx').
+11. Navigate to the folder containing the script. This file will contain the template with the new variables as specified in the CSV file. The template will have the CSV file name appended (e.g., 'FL_Crop_BMP_dataset_Tomato.xlsx').
 
 12. Inspect the sheets where variables were expected to be added.
 
 13. Verify that the dictionary sheets were updated as well.
 
-This completes the process for inserting variables into a Crop BMP
-template.
+This completes the process for inserting variables into a Crop BMP template.
 
 **Troubleshooting**
 
-One anticipated source of problems is in linking specific variables to
-equivalent ICASA names. At the moment, the ICASA Master Variable List can be downloaded [here](https://github.com/DSSAT/ICASA-Dictionary/raw/refs/heads/main/ICASA%20Data%20Dictionary.xlsx). Users either have to browse
-the sheets or use the search function to locate variables. The standards
-include a small number of crop-specific variables but tends not to
-include crop-specific harvest quality or crop health variables.
-Users may suggest new variables via the ICASA Data Dictionary github site.
+One anticipated source of problems is in linking specific variables to equivalent ICASA names. At the moment, the ICASA Master Variable List can be downloaded [here](https://github.com/DSSAT/ICASA-Dictionary/raw/refs/heads/main/ICASA%20Data%20Dictionary.xlsx). Users either have to browse the sheets or use the search function to locate variables. The standards
+include a small number of crop-specific variables but tends not to include crop-specific harvest quality or crop health variables. Users may suggest new variables via the ICASA Data Dictionary github site.
 
-The most likely source of errors are mismatches among file names, failure to create the expected folders, and errors in the organization of the CSV file containin variable names.
+The most likely source of errors are mismatches among file names or paths, failure to create the expected folders, and errors in the organization of the CSV file containin variable names. You can often easily debug file name or path issues with getwd() and by examining the variables for file paths (e.g., csv_path).
