@@ -1,37 +1,29 @@
 ---
 date: "`r Sys.Date()`"
 author: "Jeff White, Univ. Florida"
-output: 
+output:
   pdf_document:
     latex_engine: pdflatex
     keep_tex: yes
+header-includes:
+  - \usepackage{float}
 ---
-
-```{r setup, echo=FALSE, comment=NA}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE) 
 # Specify the name of the dataset here as data_set_name.
-data_set_name <- "FDACS_UFGA8201_peanut.94.xlsx"
+#data_set_name <- "FDACS_UFGA8201_peanut.94.xlsx"
+data_set_name <- "FL_Crop_BMP_errors_for_testing_QA.xlsx" # or whatever the path is.
+data_set_name <- gsub("\\\\", "/", data_set_name)  # Escape backslashes early!
+
 file_path <- file.path("Test_data", data_set_name)
+#file_path <- file.path(data_set_name)
 
-```
-
----
-title: "`r paste0('**Quality Assurance Testing for the Crop BMP Dataset: \n', data_set_name, "**")`"
----
-
-# 1. Introduction
-
-In preparing datasets based on the BMP data template, researchers need to check that their data are entered correctly, that the dataset is formatted as intended, and that variables are correctly defined. The goal of this report is to allow users to conduct a series of quality assurance (QA) tests on a dataset prior to submitting the data to a repository or funding agency. The underlying R script reviews crop BMP datasets according to the "four C's", whereby a dataset is:
-
-1.  _Correct_: The values are accurate within the expected range of measurement error. We emphasize that the main error-checking should be done as a part of the normal data management pipeline prior to loading into the BMP template.
-2.  _Complete_: The dataset is complete enough to enable further analysis without researchers having to seek guidance on how the crop was grown, weather conditions, etc.
-3.  _Coherent_: Identifiers (keys) used to link data across sheets are used consistently.
-4.  _Compatible_: By linking the BMP terminology to the ICASA standards, we expect that datasets can be used with a wide range of tools including artificial intelligence, machine learning and either simulation or statistical models.
-
-This document (the exported PDF) is produced by running the knit command within RStudio. It alternates between text (such as this section), blocks of the R script, and blocks of output from R. Users who are familiar with R and R Markdown should feel free to modify the markdown file as needed.
-
-```{r load-libraries-set-wd, echo = FALSE, comment=NA}
-library(knitr)
+# Load libraries
+library(knitr)  # Main library for producing PDF output via LaTex
+library(kableExtra) # Provides added funtionality for kable()
+library(xtable)
+library(glue)
+library(Hmisc)
 library(ggplot2)
 library(maps)
 library(mapdata)
@@ -39,10 +31,47 @@ library(ggrepel)
 library(openxlsx2)  #Required for manipulating rows and columns of Excel
 library(reshape2)
 
-#' Sets the working directory to the folder where the script, the template  
-#' and the variable list reside. The new file will also be created here.
-# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# Load workbook and define data_start_position in setup
+wb <- wb_load(file_path)
+ls_sheets <- wb_get_sheet_names(wb)
+data_start_position <- which(ls_sheets == "M1. Experiments")  # Find the position of 'M1__Experiments' ONCE
+dictionary_length <- 3
+
+# Function to escape problem variables for LaTex
+escape_latex <- function(x) {
+  gsub("([#$%&_{}~^\\\\])", "\\\\\\1", x)
+}
 ```
+
+```{r, include=FALSE}
+options(tinytex.verbose = TRUE)
+```
+
+---
+title: "`r paste0('**Quality Assurance Testing for the Crop BMP Dataset: \\n', data_set_name, "**")`"
+---
+
+# 1. Introduction
+
+In preparing datasets based on the BMP data template, researchers need to check that their data are entered correctly, that all expected data are included, that the dataset is formatted as intended, and that all variables are correctly defined, including units of measurement. This  report contains output from the R script "FL_Crop_BMP_QA_single_dataset.Rmd", which conducts a series of quality assurance (QA) tests on a dataset prior to submitting the data to a repository or funding agency. 
+The R script reviews crop BMP datasets according to the "four C's", whereby a dataset is:
+
+1.  _Correct_: The values are accurate within the expected range of measurement error. We emphasize that the main error-checking should be done as a part of the normal data management pipeline prior to loading into the BMP template.
+2.  _Complete_: The dataset is complete enough to enable further analysis without researchers having to seek guidance on how the crop was grown, weather conditions, etc.
+3.  _Coherent_: Identifiers (keys) used to link data across sheets are used consistently.
+4.  _Compatible_: By linking the BMP terminology to the ICASA standards, we expect that datasets can be used with a wide range of tools including artificial intelligence, machine learning and either simulation or statistical models. Information on the ICASA standards is available at the [ICASA GitHub site]( https://github.com/DSSAT/ICASA-Dictionary).
+
+This document (the exported PDF) is produced by running the knit command within RStudio. It alternates between text (such as this section) and blocks of output from R. Users who are familiar with R and R Markdown should feel free to modify the markdown file as needed.
+
+Issues we have encountered in test datasets include:
+
+- Incorrect formatting of dates.
+- Use of variables that include non-standard characters (e.g. "?").
+- Introduction of new variables in unexpected positions.
+
+We try to resolve these issues as they appear. Unresolved issues and suggestions for improvements should be reported at the "Issues" section of the GitHub site: https://github.com/DSSAT/Florida_Crop_BMP_Datasets
+
+\newpage
 
 ## 1.1. Checking that the file is read as expected
 
@@ -50,12 +79,8 @@ We first list all sheets in the file `r data_set_name`. The list includes sheets
 that are defined but have no data. 
 
 ```{r list-sheets, echo=FALSE, comment=""}
-#' Load workbook
-wb <- wb_load(file_path)
-
 
 #' Retrieve a list of the names of all sheets in the dataset.
-ls_sheets <- wb_get_sheet_names(wb) # Copies sheet names into a list
 options(width = 84)
 print(unname(ls_sheets))
 ```
@@ -63,22 +88,23 @@ print(unname(ls_sheets))
 \newpage
 
 ```{r , include=FALSE}
-#' This loop should create approximately 30 sheets.
+#' This loop should create approximately 30 data frames.
 for (i in 1:length(ls_sheets)) {
   sheet_name <- ls_sheets[[i]]
   cat(sheet_name)
-  df_name <- make.names(sheet_name)
+  df_name <- gsub("\\.", "_", make.names(sheet_name))  # Replace all periods
   df_temp <- wb_to_df(wb, sheet = sheet_name, colNames = TRUE,
-                       start_row=4, na.strings = "",
-                     skip_empty_rows = TRUE,
-                     skip_empty_cols = TRUE)
+                       start_row = 4, na.strings = "",
+                       skip_empty_rows = TRUE, skip_empty_cols = TRUE)
+
   assign(df_name, df_temp)
+  
 }
 ```
 
 # 2.0. Correct and Complete?: Summarizing the Content of Individual Sheets
 
-Summaries are generated for the contents of each sheet except for the first three sheets, which contain instructions, and the last three, which are the dictionaries. If sufficient numeric data are present, boxplots are created for any numeric variables, including management levels. 
+Summaries are generated for the contents of each sheet except for the first three sheets, which contain instructions, and the last three, which are the dictionaries. If sufficient numeric data are present, box plots are created for any numeric variables, including management levels. 
 
 Results for each sheet should be checked to make sure they match expectations for all variables. The QA tool is *not* meant as the primary means of detecting incorrect values. We assume the researchers have already conducted extensive quality control.
 
@@ -88,7 +114,13 @@ If numeric data appear in tables of frequencies, this means the data for the var
 
 Depending on the amount of data in the sheets, the corresponding group of box plots may appear after the summary of the next sheet (i.e., the box plots will be slightly out of order). 
 
-```{r check-content-of-sheets, echo=FALSE, comment=NA, warning=FALSE, fig.height=1.2, fig.width=3.2}
+```{r check-content-of-sheets, echo=FALSE, results='asis', comment=NA, warning=FALSE, fig.height=1.0, fig.width=3.3, fig.pos = 'h'}
+#```{r check-content-of-sheets, echo=FALSE, comment=NA, warning=FALSE, fig.height=1.5, fig.width=3.0}
+# With asis:
+options(digits = 4)
+
+# fig.pos is used to place figures after the text
+#```{r check-content-of-sheets, echo=FALSE, comment=NA, warning=FALSE, results='hold', fig.height=0.8, fig.width=3.6, fig.pos = 'h'} 
 #```{r check-content-of-sheets, echo=FALSE, comment=NA, warning=FALSE,  results='hold' , fig.height = 4.4}
 options(width = 92) # Allows longer lines to display without wrapping
 
@@ -98,10 +130,10 @@ has_5_numeric_values <- function(column) {
   sum(!is.na(column) & is.numeric(column)) >= 5
 }
 
-#' Prior to beginning processing, we need to limit  E3..Plots to six variables
+#' Prior to beginning processing, we need to limit  E3__Plots to six variables
 #' because users have the option of providing plot maps that may cause additional
 #' variables to be created
-E3..Plots <- E3..Plots[ , c(1:6)]
+E3__Plots <- E3__Plots[ , c(1:6)]
 
 #' Create function for summarizing non-numeric data
 # Function to create a combined frequency table for all non-numeric variables in a data frame
@@ -156,53 +188,20 @@ replace_neg99_with_na <- function(df) {
   return(df)
 }
 
-# Create function to left-align column names based on maximum value length.
-left_align_column_names <- function(df) {
-  # Find the maximum length of values in each column and the column name length
-  max_lens <- sapply(seq_along(df), function(i) {
-    col <- df[[i]]
-    if (is.character(col)) {
-      max_value_length <- max(nchar(col), na.rm = TRUE)
-    } else {
-      max_value_length <- max(nchar(as.character(col)), na.rm = TRUE)
-    }
-    max(nchar(names(df)[i]), max_value_length)
-  })
-  
-  # Add spaces to the right of each column name to make them the same length as the longest value in the column or the column name itself
-  new_colnames <- sapply(seq_along(names(df)), function(i) {
-    name <- names(df)[i]
-    max_len <- max_lens[i]
-    paste0(name, strrep(" ", max_len - nchar(name)))
-  })
-  
-  # Assign the new column names to the data frame
-  names(df) <- new_colnames
-  
-  return(df)
-}
-
-# Find position of 'M1..Experiments' in ls_sheets
-data_start_position <- which(ls_sheets == "M1. Experiments") # Get start of actual data
-dictionary_length <- 3 #Number of dictionary sheets
-
 # ls_sheets is the list of dataframe names
 for (i in data_start_position:(length(ls_sheets) - dictionary_length)) {
   sheet_name <- ls_sheets[[i]]
-  name_of_df <- make.names(sheet_name)
-  cat(paste0("START processing ", name_of_df, "\n\n"))
+  name_of_df <- gsub("\\.", "_", make.names(sheet_name))  # Replace all periods
+  # Generate the Markdown header
+  name_of_df_escaped <- escape_latex(name_of_df)
+  cat(knitr::asis_output(paste0("Start processing of:", name_of_df_escaped, "\n\n")))
   df_being_checked <- get(name_of_df)  # Convert temporary name as string to valid df name.
 
   # Apply function to summarize non-numeric data
   df_frequencies <- create_combined_frequency_table(df_being_checked)
-  df_frequencies$Variable <- format(df_frequencies$Variable, justify = "left")
-  df_frequencies$Value <- format(df_frequencies$Value, justify = "left")
+  print(kable(head(df_frequencies), caption = name_of_df_escaped, escape = FALSE))
 
-  # Set a higher value for max.print
-  options(max.print = 200)  # Adjust the value as needed
-  df_frequencies <- left_align_column_names(df_frequencies)
-  print(df_frequencies, row.names = FALSE)
-  cat("\n")
+  cat("\n\n")
  
   # Start of processing for numeric data
   # set working df to empty
@@ -232,54 +231,120 @@ for (i in data_start_position:(length(ls_sheets) - dictionary_length)) {
       && (nrow(numeric_columns) > 5)
   ) {
     
-    # Print summary of numeric data
-    print(summary(numeric_columns))
+    # Print summary of numeric data. Replacing summary() with Hmisc::describe()
+    cat("\\begin{verbatim}\n")
+      print(Hmisc::describe(numeric_columns))
+    cat("\\end{verbatim}\n")
     
     # Create a horizontal box plot with individual numerical axes
     # Melt the dataframe to long format using reshape2 package
     melted_data <- reshape2::melt(numeric_columns)
     
 # Loop through unique variables and create boxplots
-for(m in unique(melted_data$variable)){
-  # Subset data for the current variable
+for (m in unique(melted_data$variable)) {
   subset_data <- melted_data[melted_data$variable == m, ]
-  
-  # Create boxplot for the subsetted data
-        boxplot <- ggplot(subset_data, aes(x = variable, y = value)) +
-        ggplot2::geom_boxplot() +
-        stat_summary(fun.y=mean, geom="point", shape=20, size=6, color="red", fill="red") +
-        ggplot2::ggtitle(paste0("Boxplot for ", name_of_df)) +
-        xlab(m)+
-        ggplot2::coord_flip() +
-        theme(plot.title = element_text(size = 9), axis.title.y = element_text(size = 7)) + # Adjust the size as needed
-        ggplot2::theme(axis.title.x = ggplot2::element_blank()) + # Suppress x-axis text
-        ggplot2::theme(axis.text.y = ggplot2::element_blank())  # Suppress y-axis text
-      print(boxplot)
-      
-      cat("\n")
-    }
-
+  boxplot <- ggplot(subset_data, aes(x = variable, y = value)) +
+    geom_boxplot() +
+    stat_summary(fun = mean, geom = "point", shape = 20, size = 6, color = "red", fill = "red") +
+    ggtitle(m) +                       # Title will now match variable name
+    coord_flip() +
+    theme(
+      plot.title = element_text(size = 8), 
+      axis.title.y = element_blank(),
+      axis.title.x = element_blank(),    # Suppress x-axis text
+      axis.text.y = element_blank()      # Suppress y-axis text
+    )
+  print(boxplot)
+  cat("\n")
+  }
     
-        cat("\n")
   } 
   
-  cat(paste0("End of processing for ", name_of_df, "\n"))
-  cat("*            ===================================================            *\n")
-  cat("\n")
+cat(knitr::asis_output(paste0("\n END Processing ", name_of_df_escaped, "\n\n")))
+cat("\n") # Empty line for paragraph break in Markdown
   
 }
 ```
 
----
+\newpage
 
-## 2.2. Correct Dates? Are events sequenced as expected?
+## 2.2. Correct Dates? Formats correct? Events sequenced as expected?
 
-Dates of key management events such as plantings, irrigations and harvests are sometimes
-entered incorrectly. A common problem is inversion of days and months (is '3/5' "March 5" or "3 April"?). To check dates, we plot management events for each combination of Experiment, Site and Year along a timeline. 
+Dates of key management events such as plantings, irrigations and harvests are sometimes entered incorrectly. A common problem is inversion of days and months (is '3/5/2021' "March 5, 2021" or "3 may 2021"?). Dates also may be entered in non-standard formats such as text. We prefer that the internal data format be used and data be expressed in ISO format (e.g., 2023-03-13 or yyyy-mm-dd). The various workbook options for expressing dates are still acceptable so long as the data are truly formatted as dates.
+
+### 2.2.1 Checking that date variables are formatted as dates
+
+We first test whether dates reported for management, measurements and weather are in an acceptable date format. Not all date variables may be tested.
+
+```{r check-dates2-2-1, echo = FALSE, comment=""}
+#' Create a function to check date formats
+date_format_check <- function(df, date_var) {
+  # Capture the name of the data frame object for clearer messages
+  df_name <- deparse(substitute(df))
+  
+  # --- Input Validation ---
+  # Check first whether df lacks data
+  if (is.null(df) || (is.data.frame(df) && nrow(df) == 0)) {
+    return(sprintf("No rows with data in '%s'. Skipping date test.", df_name))
+  }
+  if (!is.character(date_var) || length(date_var) != 1) {
+    stop("Error: Input 'date_var' must be a single character string (the column name).")
+  }
+  
+  # --- Check if Column Exists ---
+  if (!date_var %in% names(df)) {
+    stop(sprintf("Error: Column '%s' not found in data frame '%s'.", date_var, df_name))
+  }
+  
+  # --- Extract the Column ---
+  col_data <- df[[date_var]]
+  
+  # --- Check Format and Content ---
+  
+  # Case 1: The column IS a Date object
+  if (inherits(col_data, "Date")) {
+    # Sub-case: It's Date type, but ALL values are NA
+    if (all(is.na(col_data))) {
+      # Message 3: No valid date values found (all NA)
+      # Note: This interpretation assumes message 3 applies when the column
+      # is technically 'Date' class but effectively empty.
+      return(sprintf("No valid date values found for '%s' in '%s'. (Column is Date class but all values are NA)", date_var, df_name))
+    } else {
+      # Message 1: Valid Date format with at least one non-NA value
+      return(sprintf("The variable '%s' in '%s' is valid.", date_var, df_name))
+    }
+  } else {
+    # Case 2: The column is NOT a Date object (it's character, numeric, factor, etc.)
+    # Message 2: Needs correction (covers text and other incorrect types)
+    col_class <- class(col_data)[1] # Get the primary class for info
+    return(sprintf("The variable '%s' in '%s' is given as %s and cannot be processed as given. Please correct.",
+                   date_var, df_name, col_class))
+  }
+}
+
+#' Test various dates that may appear in a dataset
+print(date_format_check(E5__Planting, "Planting date"))
+print(date_format_check(E6__Irrigation, "Date of irrigation"))
+print(date_format_check(E7__Fertilizer, "Date"))
+print(date_format_check(E8__Organic_Amendments, "Date"))
+print(date_format_check(E9__Tillage, "Date"))
+print(date_format_check(E10__Chemical_Applications, "Date"))
+print(date_format_check(E11__Harvest, "Harvest date"))
+print(date_format_check(E12__Preplant_Soil, "Sampling date"))
+print(date_format_check(O3__Crop_Growth, "Sampling date"))
+print(date_format_check(O4__Crop_Health, "Sampling date"))
+print(date_format_check(O5__Soil_Surface_Properties, "Sampling date"))
+print(date_format_check(O6__Soil_Layer_Properties, "Sampling date"))
+print(date_format_check(W2__Daily_Weather_Data, "Date"))
+
+```
+
+### 2.2.2 Checking dates for management events using a timeline
+As a further check of key dates reported for crop management, we plot management events for each combination of Experiment, Site and Year along a timeline. 
 To reduce the potential number of plots, data from different treatments and replicates are pooled together. This means some timelines may include multiple instances of plantings, fertilizer applications, harvests or other events.
 We currently do not consider crop phenology such as flowering or maturity dates.
 
-```{r check-dates, echo = FALSE, comment="", fig.height = 8}
+```{r check-dates2-2-2, echo = FALSE, comment="", fig.height = 7.5}
 
 #' Create cropping calendar for the dataset.
 #' Assemble dates in different dataframes
@@ -291,37 +356,43 @@ We currently do not consider crop phenology such as flowering or maturity dates.
 #' E11. Harvest
 #' To facilitate processing, we extract the date and assign an event code. 
 #' Because some sheets have no data (nrows = 0), we have to consider two cases.
-E5Planting <- E5..Planting[,c(1:3,5)]
+E5Planting <- E5__Planting[,c("Experiment ID", "Site", "Year", "Planting date")]
 E5Planting$Event <- "P"   # Coded for planting
 colnames(E5Planting) <- c("Experiment ID", "Site", "Year", "Date", "Event")
+E5Planting$Date <- as.Date(E5Planting$Date) # Ensures numeric values of NA don't cause type mismatch
 
-E6Irrigation <- E6..Irrigation[,c(1:3,5)]
+E6Irrigation <- E6__Irrigation[,c("Experiment ID", "Site", "Year", "Date of irrigation")]
 if(nrow(E6Irrigation) > 0){E6Irrigation$Event <- "I"   # Coded for irrigation
 } else {E6Irrigation$Event <- character(0)}
   colnames(E6Irrigation) <- c("Experiment ID", "Site", "Year", "Date", "Event")
-
-E7Fertilizer <- E7..Fertilizer[,c(1:3,5)]
+E6Irrigation$Date <- as.Date(E6Irrigation$Date)
+  
+E7Fertilizer <- E7__Fertilizer[,c("Experiment ID", "Site", "Year", "Date")]
 if(nrow(E7Fertilizer) > 0){E7Fertilizer$Event <- "F"   # Coded for fertilizer
 } else {E7Fertilizer$Event <- character(0)}
 colnames(E7Fertilizer) <- c("Experiment ID", "Site", "Year", "Date", "Event")
+E7Fertilizer$Date <- as.Date(E7Fertilizer$Date)
 
-E8OrganicAmend <- E8..Organic.Amendments[,c(1:3,5)]
+E8OrganicAmend <- E8__Organic_Amendments[,c("Experiment ID", "Site", "Year", "Date")]
 if(nrow(E8OrganicAmend) > 0){E8OrganicAmend$Event <- "O"   # Coded for Organic amendments
 } else {E8OrganicAmend$Event <- character(0)}
 colnames(E8OrganicAmend) <- c("Experiment ID", "Site", "Year", "Date", "Event")
+E8OrganicAmend$Date <- as.Date(E8OrganicAmend$Date)
 
-E9Tillage <- E9..Tillage[,c(1:3,5)]
+E9Tillage <- E9__Tillage[,c("Experiment ID", "Site", "Year", "Date")]
 if(nrow(E9Tillage) > 0){E9Tillage$Event <- "T"   # Coded for Tillage
 } else {E9Tillage$Event <- character(0)}
 colnames(E9Tillage) <- c("Experiment ID", "Site", "Year", "Date", "Event")
+E9Tillage$Date <- as.Date(E9Tillage$Date)
 
-E11Harvest <- E11..Harvest[,c(1:3,5)]
+E11Harvest <- E11__Harvest[,c("Experiment ID", "Site", "Year", "Harvest date")]
 if(nrow(E11Harvest) > 0){E11Harvest$Event <- "H"   # Coded for Harvest
   } else {E11Harvest$Event <- character(0)}
 colnames(E11Harvest) <- c("Experiment ID", "Site", "Year", "Date", "Event")
+E11Harvest$Date <- as.Date(E11Harvest$Date)
 
-#' With the six temporary dataframes in hand, we merge them to create the 
-#' dataframe df_dates, removing any dataframe that lacks date information.
+#' With the six temporary data frames in hand, we merge them to create the 
+#' data frame df_dates, removing any data frame that lacks date information.
 
 #'  List of data frames
 df_list <- list(E5Planting, E6Irrigation, E7Fertilizer, E8OrganicAmend, 
@@ -341,7 +412,6 @@ if (length(df_list) > 0) {
 df_dates <- unique(df_dates) 
 #' Often data from replicates or treatments will identical values, so we use unique() 
 #' to simplify the dataset.
-#print(df_dates) # To check outputs
 
 planting_dates <- aggregate(Date ~ `Experiment ID` + Site + Year, data = subset(df_dates, Event == "P"), FUN = min)
 
@@ -352,7 +422,6 @@ df_dates <- merge(df_dates, planting_dates,
 
 # Calculate DAP relative to Planting event
 df_dates$DAP <- with(df_dates, Date - Date.Planting)
-#print(df_dates) # To check outputs
 
 # Create a separate data frame for geom_text
 df_dates$DAP <- as.numeric(df_dates$DAP)
@@ -405,24 +474,26 @@ To facilitate processing, we extract the geocoordinates and the location name, a
 # Get the map data for Florida
 florida_map <- map_data("state", region = "florida")
 
-M2Sites <- M2..Sites
+M2Sites <- M2__Sites[ , c("Site", "Latitude", "Longitude")]
 M2Sites$Source <- "M2. Sites"
-M2Sites <- M2Sites[, c(8, 1, 6, 7)]
+M2Sites <- M2Sites[, c(4, 1:3)]
 colnames(M2Sites) <- c("Source", "Location", "Lat", "Long")
 
-E2Fields <- E2..Fields
+E2Fields <- E2__Fields[ , c("Site", "Latitude", "Longitude")]
 E2Fields$Source <- "E2. Fields"
-E2Fields <- E2Fields[, c(20, 3:5)]
+E2Fields <- E2Fields[, c(4, 1:3)]
 colnames(E2Fields) <- c("Source", "Location", "Lat", "Long")
 
-S1Soils <- S1..Soil.Metadata
+S1Soils <- S1__Soil_Metadata[ , c("Soil ID", "Latitude", "Longitude")]
 S1Soils$Source <- "S1. Soil Meta"
-S1Soils <- S1Soils[, c(12, 1, 6, 7)]
+S1Soils <- S1Soils[, c(4, 1:3)]
 colnames(S1Soils) <- c("Source", "Location", "Lat", "Long")
 
-W1Weather <- W1..Weather.Station.Metadata
+W1Weather <- W1__Weather_Station_Metadata[ , c("Weather station name", 
+                                               "Latitude of station", 
+                                               "Longitude of station")]
 W1Weather$Source <- "W1. Weather"
-W1Weather <- W1Weather[, c(9, 1, 3, 4)]
+W1Weather <- W1Weather[, c(4, 1:3)]
 colnames(W1Weather) <- c("Source", "Location", "Lat", "Long")
 
 #' With the four temporary data frames in hand, we merge them to create the 
@@ -452,9 +523,7 @@ df_geo_data_map <- df_geo_data
 df_geo_data$Source <- format(df_geo_data$Source, justify = "left")
 df_geo_data$Location <- format(df_geo_data$Location, justify = "left")
 
-df_geo_data2 <- left_align_column_names(df_geo_data)
-
-print(df_geo_data2, row.names = FALSE)
+kable(df_geo_data[ ,c(1:4)], "latex", row.names = FALSE)
 ```
 
 ---
@@ -543,7 +612,7 @@ total_missing <- 0
 # Iterate over sheet names
 for (i in data_start_position:(length(ls_sheets) - dictionary_length)) {
   sheet_name <- ls_sheets[[i]]
-  df_name <- make.names(sheet_name)
+  df_name <- gsub("\\.", "_", make.names(sheet_name))  # Replace all periods
   
   # Calculate total number of non-NA values for each column
   non_na_counts <- colSums(!is.na(get(df_name)))
@@ -572,26 +641,18 @@ for (i in data_start_position:(length(ls_sheets) - dictionary_length)) {
 }
 
 # Print totals
-cat("Total Non-Missing Values across all sheets:", total_non_missing, "\n")
-cat("Total Missing Values across all sheets:", total_missing, "\n")
+cat("Total Non-Missing Values across all sheets:", total_non_missing, "\\n")
+cat("Total Missing Values across all sheets:", total_missing, "\\n")
 
 # Combine all the sheet results data frames into a single data frame
 tabulated_values <- do.call(rbind, results)
 
 # Print or return the final result
 tabulated_values <- data.frame(tabulated_values, row.names = NULL)
-# Shorten values of Variable if .GT. 30
-tabulated_values$Variable <- substr(tabulated_values$Variable, 1, 30)
-tabulated_values$Variable <- format(tabulated_values$Variable, justify = "left")
-tabulated_values$Sheet_name <- format(tabulated_values$Sheet_name, justify = "left")
-# Set a higher value for max.print
-options(width = 90, max.print = 10000)  # Adjust the value as needed
-
-tabulated_values <- left_align_column_names(tabulated_values)
-print(tabulated_values, row.names = FALSE)
+kable(tabulated_values, "latex", row.names = FALSE, longtable = TRUE)
 ```
-
 \newpage
+
 # 3.0. Coherent Identifiers?
 
 Index variables ('keys' in database terminology) from pairs of data frames are compared to make sure that the index values are identical across the sheets. This is fundamental to allowing different types of data to be linked across sheets. For example the values of 'Field location' should be the same in the sheets 'E1. Treatments' and 'E2. Fields'.
@@ -620,26 +681,13 @@ In the third case, it is helpful to provide a comment or note in the appropriate
 
 ```{r, create-TestIdsEqual, echo = FALSE, comment=""}
 # Function to test whether identifiers match in list 'test_vars'
-# First need a function to left adjust the list of test variables, test_vars
-left_align_columns <- function(df, columns) {
-  df[columns] <- lapply(df[columns], function(col) {
-    if (is.character(col)) {
-      format(col, justify = "left")
-    } else {
-      col
-    }
-  })
-  return(df)
-}
-
-# Here is the main function
 test_ids_equal <- function(df_test1, df_test2, test_vars) {
   df1_name <- deparse(substitute(df_test1))
   df2_name <- deparse(substitute(df_test2))
   
   # Test whether either df is empty with nrow()
   if (nrow(df_test1) == 0 || nrow(df_test2) == 0) {
-    cat(paste("Insufficient data to test merge of ", df1_name, " and ", df2_name), "\n")
+    cat(paste("Insufficient data to test merge of ", df1_name, " and ", df2_name), "\\n")
   } else {
     df1 <- df_test1[, test_vars]
     df2 <- df_test2[, test_vars]
@@ -668,8 +716,7 @@ test_ids_equal <- function(df_test1, df_test2, test_vars) {
     }
     
     print(message, row.names=FALSE, quote = FALSE)
-    df_merged <- left_align_columns(df_merged, test_vars) #Left adjust the variables being tested
-    print(df_merged, row.names=FALSE)
+    kable(df_merged, "latex", longtable = TRUE, row.names=FALSE)
   }
 }
 ```
@@ -682,11 +729,11 @@ test_ids_equal <- function(df_test1, df_test2, test_vars) {
 
 #' Using TestIdsEqual() to compare identifiers in the sheet E1. Treatments
 #' with values used in other sheets such as E2. Fields.
-test_ids_equal(M1..Experiments, E1..Treatments, "Experiment ID")
-test_ids_equal(E1..Treatments, E2..Fields, "Experiment ID")
-test_ids_equal(E1..Treatments, E2..Fields, c("Experiment ID", "Site"))
-test_ids_equal(E1..Treatments, E2..Fields, c("Experiment ID", "Site", "Field location"))
-test_ids_equal(E1..Treatments, E3..Plots, c("Experiment ID", "Site", "Field location"))
+test_ids_equal(M1__Experiments, E1__Treatments, "Experiment ID")
+test_ids_equal(E1__Treatments, E2__Fields, "Experiment ID")
+test_ids_equal(E1__Treatments, E2__Fields, c("Experiment ID", "Site"))
+test_ids_equal(E1__Treatments, E2__Fields, c("Experiment ID", "Site", "Field location"))
+test_ids_equal(E1__Treatments, E3__Plots, c("Experiment ID", "Site", "Field location"))
 ```
 
 ---
@@ -697,8 +744,8 @@ test_ids_equal(E1..Treatments, E3..Plots, c("Experiment ID", "Site", "Field loca
 
 #' Using TestIdsEqual() to compare identifiers in the sheet E2. Treatments
 #' with values used in other sheets such as E3. Plots.
-test_ids_equal(E2..Fields, E3..Plots, "Field location")
-test_ids_equal(E2..Fields, E3..Plots, c("Experiment ID","Field location"))
+test_ids_equal(E2__Fields, E3__Plots, "Field location")
+test_ids_equal(E2__Fields, E3__Plots, c("Experiment ID","Field location"))
 ```
 
 ---
@@ -711,21 +758,21 @@ Note that the same soil profile or weather data may be used for several experime
 
 # Using test_ids_equal() to compare identifiers in other sheets such as for soils 
 # and weather. 
-test_ids_equal(E2..Fields, S1..Soil.Metadata, "Soil ID")
-test_ids_equal(S1..Soil.Metadata, S2..Soil.Layer.Properties, "Soil ID")
-test_ids_equal(E2..Fields, W1..Weather.Station.Metadata, "Weather station ID")
-#test_ids_equal(W1..Weather.Station.Metadata, W2_Daily.Weather.Data, "Weather station ID")
+test_ids_equal(E2__Fields, S1__Soil_Metadata, "Soil ID")
+test_ids_equal(S1__Soil_Metadata, S2__Soil_Layer_Properties, "Soil ID")
+test_ids_equal(E2__Fields, W1__Weather_Station_Metadata, "Weather station ID")
+test_ids_equal(W1__Weather_Station_Metadata, W2__Daily_Weather_Data, "Weather station ID")
 ```
 
 ---
 
-## 3.4. Comparing identifiers in E1..Treatments and the various management sheets
+## 3.4. Comparing identifiers in E1__Treatments and the various management sheets
 
 Testing for matches is extended to sheets for irrigations, fertilizers, etc. Because not all sheets will have data, we first create a list of sheets with data (number of rows \> 0).
 
 ```{r, compare-IDs-E1-vs-management, echo = FALSE, comment=""}
 
-df_list <- lapply(ls_sheets, make.names)
+df_list <- lapply(ls_sheets, function(x) gsub("\\.", "_", make.names(x)))  # Replace all periods
 df_non_zero <- list()
 j <- 1
 
@@ -742,9 +789,9 @@ for (i in 8:(length(df_list) - 3)) {
 #' The last seven sheets are excluded because they don't use Experiment.ID.
 for (i in 2:(length(df_non_zero) - 7)) {
   test_df <- df_non_zero[[i]]
-  cat(paste("Comparing E1..Treatments to", test_df, "for Experiment ID", "\n"))
+  cat(paste("Comparing E1__Treatments to", test_df, "for Experiment ID", "\n"))
   test_df <- get(test_df, envir = parent.frame())
-  test_ids_equal(E1..Treatments, test_df, "Experiment ID")
+  test_ids_equal(E1__Treatments, test_df, "Experiment ID")
   cat("\n")
 }
 ```
@@ -758,7 +805,7 @@ We check whether all variables given in the various sheets appear in one of the 
 A common source of mismatches is when a variable is added to crop or soil measurements but is not added in the dictionary sheets. When variables are present in both sources, possible causes of mismatches include:
 
 - Differences in capitalization or punctuation
-- Names with trailing blank spaces
+- Names with leading or trailing blank spaces
 
 We also check whether all variables have definitions and are linked to ICASA short names.
 The processing works from the list of data frames, ls_sheets, but excludes the first three sheets and the three dictionaries.
@@ -771,8 +818,9 @@ df_variables_used <- data.frame()
 #' We iterate through the data frames, skipping first three "readme"-type sheets
 #' and last three sheets, which are the dictionaries.
 for (i in data_start_position:(length(df_list) - dictionary_length)) {
+  sheet_name <- ls_sheets[[i]]
   # Extract the data frame
-  df <- get(make.names(df_list[[i]]))
+  df <- get(gsub("\\.", "_", make.names(sheet_name)))  # Replace all periods
   
   # Extract the column names
   variable_names <- names(df)
@@ -786,8 +834,8 @@ for (i in data_start_position:(length(df_list) - dictionary_length)) {
     
     # Bind the current result to the overall result data frame
     df_variables_used <- rbind(df_variables_used, temp_result)
+    }
   }
-}
 # Return the final result data frame.
 # df_variables_used
 # Replace ".." with period-white space (". ") for sheet names
@@ -798,8 +846,8 @@ df_variables_used$InVUsed <- 1
   
 #' We create a single dictionary data frame from the three dictionaries in the 
 #' Excel file.
-df_dictionaries <- rbind(Z1..Dictionary.Metadata, Z2..Dictionary.Observations)
-df_dictionaries <- rbind(df_dictionaries, Z3..Dictionary.Soils.Weather)
+df_dictionaries <- rbind(Z1__Dictionary_Metadata, Z2__Dictionary_Observations)
+df_dictionaries <- rbind(df_dictionaries, Z3__Dictionary_Soils_Weather)
 df_dictionaries$InDict <- 1
 df_dictionaries$var_defined <- ifelse(!is.na(df_dictionaries$Definition)
                                       & !is.na(df_dictionaries$Definition), 1, 0)
@@ -838,15 +886,15 @@ check_dictionary_main$InDict  <- ifelse(check_dictionary_main$InDict  ==1
                                         & !is.na(check_dictionary_main$InDict), 1, 0)
 
 check_dictionary <- check_dictionary_main[, c(1, 2, 4, 11)]
-check_dictionary$VariableName <- substr(check_dictionary$VariableName, 1, 35)
 
 check_dictionary <- data.frame(check_dictionary)
-mis_match <- subset(check_dictionary, is.na(check_dictionary$InVUsed == 1 
-                                      & check_dictionary$InDict == 1))
+mis_match <- subset(check_dictionary, (is.na(check_dictionary$InVUsed == 1 
+                                      & check_dictionary$InDict == 1) 
+                                      | check_dictionary$InVUsed != check_dictionary$InDict))
 
 if (nrow(mis_match) > 0) 
-    {mis_match2 <- left_align_column_names(mis_match)
-     print(mis_match2, row.names = FALSE)
+    {
+    kable(mis_match, "latex", row.names = FALSE, longtable = TRUE)
 } else {
       print("[All variables used are preseent in the Dictionary worksheets.]")
     }
@@ -858,20 +906,19 @@ cat("\n")
 
 ## 4.3. Checking whether all variables used in the data sheets are defined.
 
-The list below contains all variables that lack a definition ('var_defined' = 0).
+If present, the list below contains all variables that lack a definition. 
+- If 'var_defined' = 0,  the variable is in the Dictionary but lacks a definition.
+- If 'var_defined' = NA, the variable is not in the Dictionary_
 
 ```{r Check-var_defs, echo = FALSE, warning=FALSE, comment=""}
 
-check_dictionary2 <- check_dictionary_main[, c(1, 2, 3, 11)]
-check_dictionary2$VariableName <- substr(check_dictionary2$VariableName, 1, 35)
-
+check_dictionary2 <- check_dictionary_main[, c(1, 2, 12)]
 un_defined_vars <- subset(check_dictionary2, check_dictionary2$var_defined == 0 
-                          & check_dictionary2$InVUsed == 1)
-un_defined_vars <- left_align_column_names(un_defined_vars)
+                          | is.na(check_dictionary2$var_defined))
 
 if (nrow(un_defined_vars) > 0) 
-    {un_defined_vars <- left_align_column_names(un_defined_vars)
-     print(un_defined_vars, row.names = FALSE)
+    {
+    kable(un_defined_vars, "latex", row.names = FALSE, longtable = TRUE)
 } else {
       print("[All variables used have associated definitions.]")
     }
@@ -883,24 +930,23 @@ cat("\n")
 
 ## 4.4. Checking whether all variables are linked to an ICASA short name.
 
-The list below contains all variables that are *not* associated with an ICASA 
-variable.
+If present, the list below contains all variables that are *not* associated with an ICASA short name. 
+- If 'var_defined' = 0,  the variable is in the Dictionary but no ICASA name is given.
+- If 'var_defined' = NA, the variable is not in the Dictionary_
+Further information on ICASA variables may be found at the [GitHub site](https://github.com/DSSAT/ICASA-Dictionary).
 
 ```{r Check-var_ICASA, echo = FALSE, warning=FALSE, comment=""}
 
-check_dictionary3 <- check_dictionary_main[, c(1, 2, 3, 12)]
-check_dictionary3$VariableName <- substr(check_dictionary3$VariableName, 1, 35)
+check_dictionary3 <- check_dictionary_main[, c(1, 2, 13)]
 
 no_ICASA_short <- subset(check_dictionary3, check_dictionary3$has_ICASA_short == 0 
-                          & check_dictionary3$InVUsed == 1)
+                          | is.na(check_dictionary3$has_ICASA_short == 1))
 
-
-no_ICASA_short$sheet_name <- format(no_ICASA_short$sheet_name, justify = "left")
 no_ICASA_short$VariableName <- format(no_ICASA_short$VariableName, justify = "left")
 
 if (nrow(no_ICASA_short) > 0) 
-    {no_ICASA_short <- left_align_column_names(no_ICASA_short)
-     print(no_ICASA_short, row.names = FALSE)
+    {
+  kable(no_ICASA_short, "latex", row.names = FALSE, longtable = TRUE)
 } else {
       print("[All variables used have associated ICASA short name.]")
     }
@@ -978,7 +1024,7 @@ If specific comments are attached to cells, the information may be lost in subse
 #' Test for cells with comments based on xml properties in workbook.
 #' This is more complicated than one might expect because comments are
 #' stored directly with cell values.
-#' cat("Processing comments here\n\n")
+#' cat("Processing comments here\\n\\n")
 comment_index <- data.frame()
 
 #' Loop over sheets to create a dataframe that links sheets to the index 
@@ -1034,8 +1080,8 @@ If no sheets are listed above, then no comments attached to cells were found.
 
 ```{r, echo = FALSE, results = 'asis'}
 # Generate header text based on data/variables
-header_text <- paste0("# End of analysis for \n\n## ", data_set_name)
-cat(header_text, "\n")
+header_text <- paste0("# End of analysis for ", data_set_name)
+cat(header_text)
 ```
 
 Please send questions or feedback to Jeffrey W. White.
