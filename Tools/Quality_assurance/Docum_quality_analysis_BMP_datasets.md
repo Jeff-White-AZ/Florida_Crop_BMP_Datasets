@@ -1,8 +1,8 @@
 **The Crop Tool for Quality Assurance of BMP Datasets**
 
-**Script:** FL_Crop_BMP_QA_single_dataset
+**Script:** FL_Crop_BMP_QA_single_dataset.Rmd
 
-**Date:** Aug. 12, 2024
+**Date:** May. 5, 2025
 
 **Introduction**
 
@@ -86,4 +86,4 @@ data will generate, but it is difficult to know if all cases are
 covered.
 
 The most likely source of small errors is mismatches among worksheet
-names, individual variable names, and values for identifiers.
+names, individual variable names, and values for identifiers. This includes using non-standard characters in variable names (e.g. "?") and introducing new variables in unexpected locations such as among identifiers (e.g., immedaitely after "Experiment ID").
