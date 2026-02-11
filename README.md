@@ -14,7 +14,9 @@ This web site contains the blank template (FL_Crops_BMP_Template.xlsx), example 
 
 - Data_uploading_script: Provides three examples of how data can be uploaded to a partially completed dataset.
 
-- Quality_assurance: Analyses a dataset according to what we term "the four C's of dataset. Datasets should be Correct, Complete, Coherent, and Compatible. The results are provided as text-based report in PDF that inlcudes a map of locations, time-line plots, and box-plots.
+- Quality_assurance_control: Analyses a dataset according to what we term "the four C's of dataset. Datasets should be Correct, Complete, Coherent, and Compatible. The results are provided as text-based report in PDF that inlcudes a map of locations, time-line plots, and box-plots.
+
+For further introduction to the template and associated scripts, four videos are available at the FDACS BMP research site: [Florida Department of Agriculture &amp; Consumer Services](https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices/BMP-Research)
 
 ## Basic Template Features
 
