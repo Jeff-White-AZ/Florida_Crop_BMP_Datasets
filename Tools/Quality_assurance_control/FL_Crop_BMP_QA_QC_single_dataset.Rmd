@@ -1,6 +1,6 @@
 ---
 date: "`r Sys.Date()`"
-author: "Jeff White, Univ. Florida"
+author: "John/Jane Doe, Univ. Florida"
 output:
   pdf_document:
     latex_engine: pdflatex
@@ -11,8 +11,8 @@ header-includes:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE) 
 # Specify the name of the dataset here as data_set_name.
-#data_set_name <- "FDACS_UFGA8201_peanut.94.xlsx"
-data_set_name <- "FL_Crop_BMP_errors_for_testing_QA.xlsx" # or whatever the path is.
+data_set_name <- "FDACS_UFGA8201_peanut.94.xlsx"
+#data_set_name <- "FL_Crop_BMP_errors_for_testing_QA_QC.xlsx" # or whatever the path is.
 data_set_name <- gsub("\\\\", "/", data_set_name)  # Escape backslashes early!
 
 file_path <- file.path("Test_data", data_set_name)
@@ -48,12 +48,13 @@ options(tinytex.verbose = TRUE)
 ```
 
 ---
-title: "`r paste0('**Quality Assurance Testing for the Crop BMP Dataset: \\n', data_set_name, "**")`"
+title: "`r paste0('**Quality Assurance & Testing for the Crop BMP Dataset: \\n', data_set_name, "**")`"
 ---
 
 # 1. Introduction
 
-In preparing datasets based on the BMP data template, researchers need to check that their data are entered correctly, that all expected data are included, that the dataset is formatted as intended, and that all variables are correctly defined, including units of measurement. This  report contains output from the R script "FL_Crop_BMP_QA_single_dataset.Rmd", which conducts a series of quality assurance (QA) tests on a dataset prior to submitting the data to a repository or funding agency. 
+In preparing datasets based on the BMP data template, researchers need to check that their data are entered correctly, that all expected data are included, that the dataset is formatted as intended, and that all variables are correctly defined, including units of measurement. This report contains output from the R script "FL_Crop_BMP_QA_QC_single_dataset.Rmd", which conducts a series of quality control (QC) tests on a dataset prior to submitting the data to a repository or funding agency. 
+Users are strongly urged to run this tool throughout dataset preparation rather than a single run upon a presumed "final" dataset. It is far easier to correct errors as an experiment is executed than waiting until all data acquisition and analyses are completed. Because this report includes guidance on possible sources of errors and emphasizes quality testing as a continuous process, use of the tool combines elements of quality assurance and quality control, hence "QA/QC".
 The R script reviews crop BMP datasets according to the "four C's", whereby a dataset is:
 
 1.  _Correct_: The values are accurate within the expected range of measurement error. We emphasize that the main error-checking should be done as a part of the normal data management pipeline prior to loading into the BMP template.
@@ -104,13 +105,13 @@ for (i in 1:length(ls_sheets)) {
 
 # 2.0. Correct and Complete?: Summarizing the Content of Individual Sheets
 
-Summaries are generated for the contents of each sheet except for the first three sheets, which contain instructions, and the last three, which are the dictionaries. If sufficient numeric data are present, box plots are created for any numeric variables, including management levels. 
+Summaries are generated for the contents of each sheet except for the first three sheets, which contain instructions, and the last three, which contain the dictionaries. If sufficient numeric data are present, box plots are created for any numeric variables, including management levels. 
 
-Results for each sheet should be checked to make sure they match expectations for all variables. The QA tool is *not* meant as the primary means of detecting incorrect values. We assume the researchers have already conducted extensive quality control.
+Results for each sheet should be checked to make sure they match expectations for all variables. The QA/QC tool is *not* shoudl never serve as the primary means of detecting incorrect values. We assume the researchers have already conducted extensive data validation.
 
 ## 2.1. Summaries for each sheet (Tabular summaries first, then box plots of numeric variables).
 
-If numeric data appear in tables of frequencies, this means the data for the variable has been interpreted as text (character sting). This can arise if there are any non-numeric values such as "." in the original data. Be sure to check rows below the actual data in case a character has inadvertently been entered below the main data.
+If numeric data appear in tables of frequencies, this means the data for the variable has been interpreted as text (character sting). This can arise if there are any non-numeric values such as "." in the original data. Be sure to inspect cells in the column below any problem variables in case a character has inadvertently been entered below the intended data.
 
 Depending on the amount of data in the sheets, the corresponding group of box plots may appear after the summary of the next sheet (i.e., the box plots will be slightly out of order). 
 
@@ -270,7 +271,7 @@ cat("\n") # Empty line for paragraph break in Markdown
 
 ## 2.2. Correct Dates? Formats correct? Events sequenced as expected?
 
-Dates of key management events such as plantings, irrigations and harvests are sometimes entered incorrectly. A common problem is inversion of days and months (is '3/5/2021' "March 5, 2021" or "3 may 2021"?). Dates also may be entered in non-standard formats such as text. We prefer that the internal data format be used and data be expressed in ISO format (e.g., 2023-03-13 or yyyy-mm-dd). The various workbook options for expressing dates are still acceptable so long as the data are truly formatted as dates.
+Dates of key management events such as plantings, irrigations and harvests are sometimes entered incorrectly. A common problem is inversion of days and months (is '3/5/2021' "March 5, 2021" or "3 may 2021"?). Dates also may be entered in non-standard formats such as text. We prefer that the internal data format be used and data be expressed in ISO format (e.g., 2023-03-13 or yyyy-mm-dd). The various workbook formats for expressing dates are still acceptable so long as the data are truly recorded as dates.
 
 ### 2.2.1 Checking that date variables are formatted as dates
 
@@ -595,7 +596,7 @@ compare_sheet_names(ls_sheets, template_sheets)
 
 ## 2.5. Completeness of data in individual sheets
 
-To assess completeness, we need to know whether most of the variables actually have data values (e.g., are not empty cells). Below is a count of total values for variables used in each sheet. To avoid the output being split into two sections, variable names that are longer than 30 characters are truncated.
+To assess completeness, we need to know how many variables actually have data values (e.g., are not empty cells). Below is a count of total values for variables used in each sheet. To avoid the output being split into two sections, variable names that are longer than 30 characters are truncated.
 
 ```{r complete-sheets, echo = FALSE, comment=""}
 
@@ -672,12 +673,12 @@ If the two frames are of different lengths, then there is a problem. If the two 
 
 Common sources of mismatches include:
 
--   Inconsistent use of spaces such as 'Blk 1' vs. 'Blk1'.
+-   Inconsistent use of spaces such as 'Blk 1' vs. 'Blk1' or other puncutation ('Blk_1').
 -   Simple spelling errors ('Fred' vs. 'Frred')
 -   Experiments, treatments or plots that were either never planted or not harvested.
 -   Extra rows being read in a given sheet, leading to an empty cell being assigned a value of NA. This may arise if a stray character appears outside of the intended range of data.
 
-In the third case, it is helpful to provide a comment or note in the appropriate sheets.
+In the third case, it is helpful to provide a comment or note in the appropriate sheets to explain why additional data are missing.
 
 ```{r, create-TestIdsEqual, echo = FALSE, comment=""}
 # Function to test whether identifiers match in list 'test_vars'
@@ -1084,7 +1085,7 @@ header_text <- paste0("# End of analysis for ", data_set_name)
 cat(header_text)
 ```
 
-Please send questions or feedback to Jeffrey W. White.
+Please post questions or feedback to https://github.com/DSSAT/Florida_Crop_BMP_Datasets/tree/main
 
 Users who are familiar with R and Rmarkdown are encouraged to modify the script as needed.
 
