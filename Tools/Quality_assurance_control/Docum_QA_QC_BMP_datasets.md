@@ -8,15 +8,15 @@
 
 A major issue in preparing any dataset for subsequent use is whether the
 data meet the expectations of users in terms of accuracy, completeness,
-documentation, and other criteria. The Crop BMP tool for quality assurance
-(QA) conducts a series of tests on a dataset. These tests may usefully
+documentation, and other criteria. The Crop BMP tool for quality assurance and quality control
+(QA/QC) conducts a series of tests on a dataset. These tests may usefully
 be run multiple times while completing a dataset to avoid problems
 becoming harder to resolve as more data are entered. This feature of
 assessing quality during the creation process distinguishes “quality
 assurance” from the more common term “quality control”, which refers to
 assessing the quality of a finished product.
 
-The R script FL_Crop_BMP_QA_single_dataset reviews Crop BMP datasets according to
+The R script FL_Crop_BMP_QA_QC_single_dataset reviews Crop BMP datasets according to
 what we term the "four C's", whereby a dataset is:
 
 1. **Correct**: The values are accurate within the expected range of
@@ -45,12 +45,12 @@ The basic procedure for using the script is outlined below. We assume
 that the user is familiar with basic operation of the R language, use of
 RStudio, and understands how Crop BMP datasets are organized.
 
-1. Download the script ‘FL_Crop_BMP_QA_single_dataset’ to a folder of your
+1. Download the script ‘FL_Crop_BMP_QA_QC_single_dataset’ to a folder of your
    choice.
 
 2. Copy the Crop BMP dataset file to the same folder or a subfolder such as 'Data'.
 
-3. Open the R script ‘FL_Crop_BMP_QA_single_dataset’ in RStudio.
+3. Open the R script ‘FL_Crop_BMP_QA_QC_single_dataset’ in RStudio.
 
 4. If not done previously, install the packages that RStudio detects
    are required. These might include: openxlsx2, knitr, ggplot2, maps,
@@ -71,11 +71,11 @@ RStudio, and understands how Crop BMP datasets are organized.
 
 9. The ‘Render” tab should become active and will display a few
    processing steps as the document is converted to a PDF titled
-   ‘FL_Crop_BMP_QA_single_dataset.pdf’.
+   ‘FL_Crop_BMP_QA_QC_single_dataset.pdf’.
 
 10. View the PDF document, which should appear in the same folder as the script.
 
-This completes the process for generating a QA report for an Crop BMP
+This completes the process for generating a QA/QC report for an Crop BMP
 dataset.
 
 **Troubleshooting**
